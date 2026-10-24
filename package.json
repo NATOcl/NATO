@@ -1,0 +1,27 @@
+{
+  "name": "nato-cv",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CV de Nicolás Troncoso Olivares",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:cv": "vite",
+    "dev:app": "npm --prefix AlbumVault run dev -- --port 5174 --base=/albumvault/",
+    "dev:api": "node server.js",
+    "build": "vite build && npm --prefix AlbumVault run build -- --base=/albumvault/",
+    "start": "node server.js",
+    "preview": "npm run build && node server.js"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.2",
+    "vite": "^8.3.5"
+  }
+}

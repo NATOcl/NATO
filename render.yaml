@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: nato-cv
+    runtime: node
+    plan: free
+    buildCommand: npm ci --include=dev && npm --prefix AlbumVault ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 22.12.0
+      - key: NODE_ENV
+        value: production

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AlbumVault — colección de álbumes</title>
+  <meta name="description" content="Catálogo personal de álbumes con valoraciones de media estrella." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="AlbumVault" />
+  <meta property="og:title" content="AlbumVault — colección de álbumes" />
+  <meta property="og:description" content="Catálogo personal de álbumes con valoraciones de media estrella." />
+  <meta property="og:locale" content="es_ES" />
+  <!-- No og:image: the only asset this server is willing to hand out is the
+       document itself, and a link preview pointing at /index.html is worse than
+       none. The favicon below is the whole brand surface. -->
+  <meta name="twitter:card" content="summary" />
+
+  <!-- The palette is resolved here, before anything is painted, so a reload never
+       flashes the wrong one. It has to be a separate tiny script: the React app
+       mounts at the end of the body, which is far too late. The storage key and
+       the three mode names are repeated in src/lib/theme.js on purpose —
+       keep the two in sync. -->
+  <script>
+    (() => {
+      let mode = "system";
+      try { mode = localStorage.getItem("albumvault.theme") || "system"; } catch (e) { /* storage off: follow the OS */ }
+      if (mode !== "light" && mode !== "dark") mode = "system";
+      const dark = mode === "dark" || (mode === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+      document.documentElement.dataset.themeMode = mode;
+    })();
+  </script>
+  <meta name="theme-color" content="#f4f1ea" />
+
+  <!-- Inline because the server serves nothing but the built document: a favicon.ico file would 404 by design. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23141414'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%234a4a4a' stroke-width='1.5'/%3E%3Ccircle cx='16' cy='16' r='4.5' fill='%23c9a227'/%3E%3Ccircle cx='16' cy='16' r='1.5' fill='%23141414'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

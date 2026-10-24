@@ -1,0 +1,25 @@
+node_modules/
+dist/
+.DS_Store
+Thumbs.db
+
+# OpenCode / agent tooling
+.opencode/
+.agents/
+.claude/
+.cursor/
+.codex/
+.aider*
+.continue/
+.windsurf/
+.roo/
+.cline/
+.gemini/
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+MEMORY.md
+opencode.json
+opencode.jsonc
+skills-lock.json
+.github/copilot-instructions.md

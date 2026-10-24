@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <!-- npm run dev (compila Tailwind a ./dist/output.css en modo watch) -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nicolás Troncoso — Ingeniería en Informática</title>
+  <meta name="description" content="CV de Nicolás Troncoso Olivares, estudiante de Ingeniería en Informática en Duoc UC.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="./dist/output.css" rel="stylesheet">
+</head>
+<body class="bg-film text-ink font-sans antialiased">
+
+  <!-- ========== NAV ========== -->
+  <header class="sticky top-0 z-50 bg-ink text-film border-b border-line/20">
+    <nav aria-label="Principal" class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+      <a href="#top" class="flex items-center gap-2.5 font-display font-semibold tracking-tight text-lg">
+        <span class="flex h-8 w-8 items-center justify-center rounded-sm border border-line text-sm">NT</span>
+        <span class="hidden sm:inline">Nicolás Troncoso</span>
+      </a>
+
+      <div class="hidden md:flex items-center gap-7 font-mono text-sm text-film-dim">
+        <a href="#sobre-mi" class="hover:text-signal transition-colors">Sobre mí</a>
+        <a href="#educacion" class="hover:text-signal transition-colors">Educación</a>
+        <a href="#conocimientos" class="hover:text-signal transition-colors">Conocimientos</a>
+        <a href="#portafolio" class="hover:text-signal transition-colors">Portafolio</a>
+        <a href="#certificados" class="hover:text-signal transition-colors">Certificados</a>
+        <a href="#contacto" class="hover:text-signal transition-colors">Contacto</a>
+      </div>
+
+      <details class="md:hidden relative">
+        <summary class="list-none cursor-pointer rounded-sm border border-line/60 px-3 py-1.5 text-xs font-mono">
+          menú
+        </summary>
+        <div class="absolute right-0 mt-2 w-48 rounded-sm border border-line/30 bg-ink-2 p-3 flex flex-col gap-3 font-mono text-sm text-film-dim shadow-lg">
+          <a href="#sobre-mi" class="hover:text-signal">Sobre mí</a>
+          <a href="#educacion" class="hover:text-signal">Educación</a>
+          <a href="#conocimientos" class="hover:text-signal">Conocimientos</a>
+          <a href="#portafolio" class="hover:text-signal">Portafolio</a>
+          <a href="#certificados" class="hover:text-signal">Certificados</a>
+          <a href="#contacto" class="hover:text-signal">Contacto</a>
+        </div>
+      </details>
+    </nav>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section id="top" class="relative overflow-hidden bg-ink text-film grid-panel py-24 sm:py-32">
+    <div class="reg-mark tl"></div>
+    <div class="reg-mark tr"></div>
+    <div class="reg-mark bl"></div>
+    <div class="reg-mark br"></div>
+    <div class="scan-sweep" aria-hidden="true"></div>
+
+    <div class="relative mx-auto max-w-5xl px-6">
+      <p class="reveal font-mono text-sm text-line" style="animation-delay:.05s">nicolas troncoso olivares</p>
+      <h1 class="reveal mt-3 font-display text-4xl sm:text-6xl font-semibold tracking-tight max-w-2xl" style="animation-delay:.15s">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente ut ipsam reiciendis consectetur eius minus aut perferendis, quibusdam tempore voluptates ratione rem aliquam sequi incidunt ex molestias facere dicta atque.
+      </h1>
+      <p class="reveal mt-6 max-w-xl text-base sm:text-lg text-film-dim leading-relaxed" style="animation-delay:.3s">
+        Actualmente estudio Ingeniería en Informática en Duoc UC, después de formarme como Técnico en Radiodiagnóstico y Radioterapia. Me interesa el desarrollo de software y las bases de datos.
+      </p>
+
+      <div class="reveal mt-8 flex flex-wrap gap-x-8 gap-y-2 font-mono text-sm" style="animation-delay:.4s">
+        <a href="https://github.com/NATOcl" class="text-film-dim hover:text-signal transition-colors" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/nicolas-troncoso-olivares-1257143b6/" class="text-film-dim hover:text-signal transition-colors" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://www.youtube.com/@bbippboop" class="text-film-dim hover:text-signal transition-colors" target="_blank" rel="noopener noreferrer">YouTube</a>
+      </div>
+
+      <dl class="reveal mt-16 grid grid-cols-2 gap-8 sm:grid-cols-3 max-w-xl border-t border-line/20 pt-8" style="animation-delay:.5s">
+        <div>
+          <dd class="font-display text-3xl font-semibold">+4</dd>
+          <dt class="mt-1 font-mono text-xs text-line">repositorios</dt>
+        </div>
+        <div>
+          <dd class="font-display text-3xl font-semibold">1</dd>
+          <dt class="mt-1 font-mono text-xs text-line">certificación</dt>
+        </div>
+        <div>
+          <dd class="font-display text-3xl font-semibold">2025</dd>
+          <dt class="mt-1 font-mono text-xs text-line">desde</dt>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ========== SOBRE MI ========== -->
+  <section id="sobre-mi" class="scroll-mt-20 mx-auto max-w-5xl px-6 py-20">
+    <div class="grid gap-8 md:grid-cols-[160px_1fr]">
+      <p class="tag h-fit">01 — sobre mí</p>
+      <div class="max-w-2xl space-y-4 text-ink-soft leading-relaxed pending">
+        <!-- Placeholder: reemplaza estos párrafos por tu propia biografía. -->
+        <p class="text-ink">Mi nombre es Nicolás Troncoso Olivares. Actualmente me encuentro estudiando Ingeniería en Informática en Duoc UC.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, officiis, est quidem expedita voluptas nam ex odio libero repudiandae quis doloremque dicta porro? Assumenda quae rem exercitationem odit cumque consequatur.</p>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempore laudantium dolor obcaecati, placeat, eum magnam tempora nesciunt atque suscipit reiciendis illo. Repudiandae ipsam nisi tempore tenetur eius suscipit deleniti dolor.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="border-line/20 max-w-5xl mx-auto">
+
+  <!-- ========== EDUCACION ========== -->
+  <section id="educacion" class="scroll-mt-20 mx-auto max-w-5xl px-6 py-20">
+    <div class="grid gap-8 md:grid-cols-[160px_1fr]">
+      <p class="tag h-fit">02 — educación</p>
+      <div class="max-w-2xl space-y-10">
+
+        <div class="timeline-item">
+          <p class="font-mono text-xs text-line">2025 — presente</p>
+          <h3 class="mt-1 font-display text-xl font-semibold text-ink">Ingeniería en Informática</h3>
+          <p class="mt-1 text-ink-soft">Duoc UC — Sede San Joaquín</p>
+        </div>
+
+        <div class="timeline-item">
+          <p class="font-mono text-xs text-line">2020 — 2024</p>
+          <h3 class="mt-1 font-display text-xl font-semibold text-ink">Técnico en Radiodiagnóstico y Radioterapia</h3>
+          <p class="mt-1 text-ink-soft">Duoc UC — Sede San Joaquín</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="border-line/20 max-w-5xl mx-auto">
+
+  <!-- ========== CONOCIMIENTOS ========== -->
+  <section id="conocimientos" class="scroll-mt-20 mx-auto max-w-5xl px-6 py-20">
+    <div class="grid gap-8 md:grid-cols-[160px_1fr]">
+      <p class="tag h-fit">03 — conocimientos</p>
+      <div class="max-w-2xl">
+        <p class="text-ink-soft leading-relaxed pending">
+          <!-- Placeholder: agrega una frase breve sobre cómo aplicas estas tecnologías. -->
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores obcaecati et soluta molestias ipsum dignissimos, quidem nemo dolor.
+        </p>
+
+        <ul class="mt-8 flex flex-wrap gap-3">
+          <li class="tag"><span class="text-signal">&lt;/&gt;</span> HTML</li>
+          <li class="tag"><span class="text-signal">{ }</span> CSS</li>
+          <li class="tag"><span class="text-signal">λ</span> Java</li>
+          <li class="tag"><span class="text-signal">λ</span> Python</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="border-line/20 max-w-5xl mx-auto">
+
+  <!-- ========== PORTAFOLIO ========== -->
+  <section id="portafolio" class="scroll-mt-20 mx-auto max-w-5xl px-6 py-20">
+    <div class="grid gap-8 md:grid-cols-[160px_1fr]">
+      <p class="tag h-fit">04 — portafolio</p>
+      <div class="max-w-2xl space-y-10">
+
+        <article class="border-b border-line/20 pb-8">
+          <a href="https://github.com/NATOcl/repositoriopruebaNicolasTroncosoFormaC" target="_blank" rel="noopener noreferrer" class="group">
+            <p class="font-mono text-xs text-line">python</p>
+            <h3 class="mt-1 font-display text-lg font-semibold text-ink group-hover:text-signal transition-colors">Menú de venta de entradas a prueba de errores</h3>
+          </a>
+          <p class="mt-1 text-ink-soft">Programa de consola que valida los datos del comprador y controla el stock de entradas.</p>
+          <img src="./assets/codigo1.png" alt="Fragmento de código del menú de venta de entradas en Python" class="mt-4 rounded-sm border border-line/30 max-h-72 w-auto object-cover object-top">
+        </article>
+
+        <article class="border-b border-line/20 pb-8">
+          <a href="https://github.com/NATOcl/steamverde-examen" target="_blank" rel="noopener noreferrer" class="group">
+            <p class="font-mono text-xs text-line">java</p>
+            <h3 class="mt-1 font-display text-lg font-semibold text-ink group-hover:text-signal transition-colors">SteamVerde — tienda ficticia a baja escala</h3>
+          </a>
+          <p class="mt-1 text-ink-soft">Base de datos de una tienda ficticia inspirada en Steam.</p>
+        </article>
+
+        <article>
+          <a href="https://natocl.github.io/pets" target="_blank" rel="noopener noreferrer" class="group">
+            <p class="font-mono text-xs text-line">html · css</p>
+            <h3 class="mt-1 font-display text-lg font-semibold text-ink group-hover:text-signal transition-colors">Tienda de mascotas en HTML puro</h3>
+          </a>
+          <p class="mt-1 text-ink-soft">Sitio de catálogo construido sin frameworks.</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="border-line/20 max-w-5xl mx-auto">
+
+  <!-- ========== CERTIFICADOS ========== -->
+  <section id="certificados" class="scroll-mt-20 mx-auto max-w-5xl px-6 py-20">
+    <div class="grid gap-8 md:grid-cols-[160px_1fr]">
+      <p class="tag h-fit">05 — certificados</p>
+      <div class="max-w-2xl">
+        <a href="https://www.credly.com/badges/51d581eb-3856-434b-9fce-45ea2e62666a" target="_blank" rel="noopener noreferrer"
+           class="flex items-center justify-between rounded-sm border border-line/40 px-5 py-4 hover:border-signal transition-colors group">
+          <span>
+            <span class="block font-display font-semibold text-ink group-hover:text-signal transition-colors">Python Essentials 1</span>
+            <span class="block font-mono text-xs text-line mt-0.5">Credly</span>
+          </span>
+          <span class="font-mono text-line text-sm">ver credencial →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACTO ========== -->
+  <footer id="contacto" class="scroll-mt-20 relative overflow-hidden bg-ink text-film grid-panel">
+    <div class="relative mx-auto max-w-5xl px-6 py-20">
+      <p class="tag h-fit !text-line !border-line">06 — contacto</p>
+      <h2 class="mt-6 font-display text-3xl sm:text-4xl font-semibold max-w-lg">¿Hablamos de una oportunidad?</h2>
+
+      <dl class="mt-10 grid gap-6 sm:grid-cols-2 max-w-xl font-mono text-sm">
+        <div>
+          <dt class="text-line">correo</dt>
+          <dd class="mt-1">
+            <a href="mailto:ni.troncoso@duocuc.cl?subject=Contacto%20desde%20tu%20web" class="hover:text-signal transition-colors">ni.troncoso@duocuc.cl</a>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-line">teléfono</dt>
+          <dd class="mt-1"><a href="tel:+56912345678" class="hover:text-signal transition-colors">+56 9 1234 5678</a></dd>
+        </div>
+        <div>
+          <dt class="text-line">ubicación</dt>
+          <dd class="mt-1">Puente Alto, Región Metropolitana, Chile</dd>
+        </div>
+        <div>
+          <dt class="text-line">redes</dt>
+          <dd class="mt-1 flex flex-col gap-1">
+            <a href="https://github.com/NATOcl" class="hover:text-signal transition-colors" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://www.linkedin.com/in/nicolas-troncoso-olivares-1257143b6/" class="hover:text-signal transition-colors" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </dd>
+        </div>
+      </dl>
+
+      <p class="mt-16 font-mono text-xs text-line/70">© 2026 Nicolás Troncoso Olivares</p>
+    </div>
+  </footer>
+
+</body>
+</html>

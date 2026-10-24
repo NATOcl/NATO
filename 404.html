@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirigiendo a Nicolas Troncoso</title>
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content="0; url=https://nato-cv.onrender.com/" />
+    <script>
+      (function () {
+        var base = "/NATO";
+        var path = location.pathname.indexOf(base) === 0
+          ? location.pathname.slice(base.length)
+          : "/";
+        if (!path) path = "/";
+        location.replace(
+          "https://nato-cv.onrender.com" + path + location.search + location.hash
+        );
+      })();
+    </script>
+  </head>
+  <body>
+    <p>
+      Redirigiendo a
+      <a href="https://nato-cv.onrender.com/">nato-cv.onrender.com</a>.
+    </p>
+  </body>
+</html>

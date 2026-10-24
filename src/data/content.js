@@ -43,11 +43,9 @@ export const stats = [
 ];
 
 export const about = {
-  lead: "Vengo de la precisión clínica. Hoy la aplico al software.",
+  lead: "NATOCL",
   paragraphs: [
-    "Soy Nicolás Troncoso Olivares. Estudié Técnico en Radiodiagnóstico y Radioterapia en Duoc UC y desde 2025 curso Ingeniería en Informática en la misma casa de estudios.",
-    "Mi formación clínica me enseñó a seguir protocolos, documentar con rigor y cuidar el detalle. Esas prácticas las traslado al código: validar entradas, ordenar la información y dejar todo comprensible para quien venga después.",
-  ],
+    "Soy Nicolás Troncoso Olivares. Estudié Técnico en Radiodiagnóstico y Radioterapia en Duoc UC y desde 2025 curso Ingeniería en Informática en la misma casa de estudios."
 };
 
 export const education = [
@@ -108,7 +106,7 @@ export const projects = [
     technology: "react · vite · indexeddb",
     title: "AlbumVault — catálogo musical personal",
     description:
-      "SPA para registrar álbumes, valorarlos en medios pasos y buscarlos en MusicBrainz e iTunes. El catálogo y las portadas viven en IndexedDB; un proxy Node sin estado habla con las APIs.",
+      "SPA para registrar álbumes, valorarlos en medios pasos y buscarlos en MusicBrainz e iTunes.",
     href: "/albumvault/",
   },
   {
@@ -134,14 +132,14 @@ export const projects = [
     technology: "kotlin · android studio",
     title: "Shiva — app móvil de agricultura",
     description:
-      "Aplicación móvil con pantallas de bienvenida y registro, desarrollada en Kotlin para DSY1105.",
+      "Aplicación móvil en Kotlin para DSY1105.",
     href: "https://github.com/NATOcl/DSY1105-Shiva",
   },
   {
     technology: "react · vite",
     title: "PetCare — sitio web de veterinaria",
     description:
-      "SPA de una veterinaria con rutas, login, perfil y formulario de contacto.",
+      "SPA de una veterinaria con rutas.",
     href: "https://github.com/NATOcl/NATOcl.github.io",
   },
 ];

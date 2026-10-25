@@ -12,7 +12,7 @@ Portafolio personal de Nicolas Troncoso Olivares, estudiante de Ingeniería en I
 ## Stack
 
 - **CV:** React 19, Vite 8, CSS puro y Google Fonts.
-- **AlbumVault:** React 18, Vite 5, Bootstrap Reboot e IndexedDB.
+- **AlbumVault:** React 18, Vite 8, Bootstrap Reboot e IndexedDB.
 - **Servidor:** Node.js; sirve ambas apps y hace de proxy para MusicBrainz, iTunes y las portadas.
 - **Deploy:** Render, definido en [`render.yaml`](./render.yaml).
 

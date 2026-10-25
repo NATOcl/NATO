@@ -32,8 +32,8 @@ export const socials = [
 
 export const hero = {
   eyebrow: "nicolas troncoso olivares",
-  title: "De la imagen médica al desarrollo de software.",
-  lead: "Actualmente estudio Ingeniería en Informática en Duoc UC, después de formarme como Técnico en Radiodiagnóstico y Radioterapia. Me interesa el desarrollo de software y las bases de datos.",
+  title: "NATOcl",
+  lead: "Actualmente estudio Ingeniería en Informática en Duoc UC, después de formarme como Técnico en Radiodiagnóstico y Radioterapia. Me apasiona el desarrollo de software y la inteligencia artificial.",
 };
 
 export const stats = [
@@ -45,7 +45,9 @@ export const stats = [
 export const about = {
   lead: "NATOCL",
   paragraphs: [
-    "Soy Nicolás Troncoso Olivares. Estudié Técnico en Radiodiagnóstico y Radioterapia en Duoc UC y desde 2025 curso Ingeniería en Informática en la misma casa de estudios."
+    "Soy Nicolás Troncoso Olivares. Estudié Técnico en Radiodiagnóstico y Radioterapia en Duoc UC y desde 2025 curso Ingeniería en Informática en la misma casa de estudios.",
+    "Me apasiona el desarrollo de software y la inteligencia artificial. Me gusta construir proyectos que resuelvan problemas concretos y aprender herramientas nuevas en el proceso.",
+  ],
 };
 
 export const education = [
@@ -105,41 +107,37 @@ export const projects = [
   {
     technology: "react · vite · indexeddb",
     title: "AlbumVault — catálogo musical personal",
-    description:
-      "SPA para registrar álbumes, valorarlos en medios pasos y buscarlos en MusicBrainz e iTunes.",
+    description: "Registro y valoración de álbumes.",
     href: "/albumvault/",
   },
   {
     technology: "python",
     title: "Menú de venta de entradas a prueba de errores",
-    description:
-      "Programa de consola que valida los datos del comprador y controla el stock de entradas.",
+    description: "Venta de entradas con control de stock.",
     href: "https://github.com/NATOcl/repositoriopruebaNicolasTroncosoFormaC",
   },
   {
     technology: "java",
     title: "SteamVerde — tienda ficticia a baja escala",
-    description: "Base de datos de una tienda ficticia inspirada en Steam.",
+    description: "Base de datos de una tienda de videojuegos.",
     href: "https://github.com/NATOcl/steamverde-examen",
   },
   {
     technology: "html · css",
     title: "Tienda de mascotas en HTML puro",
-    description: "Sitio de catálogo construido sin frameworks.",
+    description: "Catálogo de mascotas sin frameworks.",
     href: "https://natocl.github.io/pets",
   },
   {
     technology: "kotlin · android studio",
     title: "Shiva — app móvil de agricultura",
-    description:
-      "Aplicación móvil en Kotlin para DSY1105.",
+    description: "Proyecto de curso para Android.",
     href: "https://github.com/NATOcl/DSY1105-Shiva",
   },
   {
     technology: "react · vite",
     title: "PetCare — sitio web de veterinaria",
-    description:
-      "SPA de una veterinaria con rutas.",
+    description: "Sitio de veterinaria con rutas.",
     href: "https://github.com/NATOcl/NATOcl.github.io",
   },
 ];

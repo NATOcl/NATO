@@ -24,6 +24,47 @@ let musicBrainzQueue = Promise.resolve();
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 /* ------------------------------------------------------------------ *
+ * Rate limiting.
+ *
+ * A generous fixed window: the point is to stop a script from using the
+ * public proxy as a free load generator against MusicBrainz/iTunes, not
+ * to police a person browsing the catalog. Keyed by the client address
+ * forwarded by the platform proxy; behind a proxy the socket address is
+ * the proxy itself, so the header is the only usable key. It is a speed
+ * bump, not an authorization boundary: rotating the header evades it.
+ * ------------------------------------------------------------------ */
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 300;
+const RATE_LIMIT_MAX_KEYS = 5_000;
+const rateBuckets = new Map();
+
+function clientKey(req) {
+  const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
+  return forwarded || req.socket?.remoteAddress || "unknown";
+}
+
+function rateLimitAllows(req) {
+  const now = Date.now();
+  const key = clientKey(req);
+  let bucket = rateBuckets.get(key);
+
+  if (!bucket || bucket.resetAt <= now) {
+    bucket = { count: 0, resetAt: now + RATE_LIMIT_WINDOW_MS };
+    rateBuckets.set(key, bucket);
+
+    if (rateBuckets.size > RATE_LIMIT_MAX_KEYS) {
+      for (const [oldKey, oldBucket] of rateBuckets) {
+        if (oldBucket.resetAt <= now) rateBuckets.delete(oldKey);
+      }
+      if (rateBuckets.size > RATE_LIMIT_MAX_KEYS) rateBuckets.clear();
+    }
+  }
+
+  bucket.count += 1;
+  return bucket.count <= RATE_LIMIT_MAX;
+}
+
+/* ------------------------------------------------------------------ *
  * In-memory cache.
  *
  * Providers charge latency twice for the same album: once when the
@@ -282,6 +323,10 @@ async function musicBrainzArtistDiscography(query) {
 
 // A misconfigured upstream can return megabytes; refuse to buffer them.
 const MAX_COVER_BYTES = 12 * 1024 * 1024;
+// Lucene queries are short by nature; the cap keeps a single request from
+// turning into a megabyte of upstream URL and work.
+const MAX_QUERY_LENGTH = 160;
+const MAX_PROXY_URL_LENGTH = 4096;
 
 /* ------------------------------------------------------------------ *
  * Cover loading
@@ -359,31 +404,93 @@ async function readCapped(response, limit) {
   return Buffer.concat(chunks);
 }
 
-const CONTENT_TYPE_BY_EXTENSION = new Map([
-  [".jpg", "image/jpeg"],
-  [".jpeg", "image/jpeg"],
-  [".png", "image/png"],
-  [".webp", "image/webp"],
-  [".gif", "image/gif"],
-  [".avif", "image/avif"]
-]);
+const MAX_REDIRECTS = 3;
 
-// Content-Type is part of the cached entry, so a revalidation never has
-// to guess it again.
+function isAllowedImageUrl(value) {
+  let parsed;
+  try {
+    parsed = new URL(String(value));
+  } catch {
+    return null;
+  }
+  if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return null;
+  if (!hostAllowed(parsed.hostname)) return null;
+  return parsed;
+}
+
+// The bytes decide the type, not the upstream header: an error page served
+// with image/jpeg must never reach the browser as an image on this origin.
+// SVG is deliberately absent — it can carry script.
+function sniffImageType(buffer) {
+  if (!buffer || buffer.length < 12) return "";
+  if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) return "image/jpeg";
+  if (buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47) return "image/png";
+  const head = buffer.subarray(0, 6).toString("latin1");
+  if (head === "GIF87a" || head === "GIF89a") return "image/gif";
+  if (
+    buffer.subarray(0, 4).toString("latin1") === "RIFF" &&
+    buffer.subarray(8, 12).toString("latin1") === "WEBP"
+  ) {
+    return "image/webp";
+  }
+  if (buffer.subarray(4, 8).toString("latin1") === "ftyp") {
+    const brand = buffer.subarray(8, 12).toString("latin1");
+    if (brand === "avif" || brand === "avis") return "image/avif";
+  }
+  return "";
+}
+
+// Redirects are followed by hand because the allow-list has to be checked
+// again on every hop: `redirect: "follow"` would let an allowed host hand
+// the request over to any internal address.
 async function loadImage(remoteUrl, cap = MAX_COVER_BYTES) {
-  const response = await fetch(remoteUrl, { redirect: "follow" });
-  if (!response.ok) {
-    const error = new Error(`Cover upstream returned ${response.status}`);
-    error.status = response.status;
+  let current = isAllowedImageUrl(remoteUrl);
+  if (!current) {
+    const error = new Error("Remote image URL is not allowed");
+    error.status = 400;
     throw error;
   }
 
-  const buffer = await readCapped(response, cap);
-  const byExtension = CONTENT_TYPE_BY_EXTENSION.get(path.extname(new URL(remoteUrl).pathname).toLowerCase());
-  return {
-    buffer,
-    contentType: byExtension || response.headers.get("content-type") || "image/jpeg"
-  };
+  for (let hop = 0; hop <= MAX_REDIRECTS; hop += 1) {
+    const response = await fetch(current, { redirect: "manual" });
+
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get("location");
+      let next = null;
+      try {
+        next = location ? isAllowedImageUrl(new URL(location, current)) : null;
+      } catch {
+        next = null;
+      }
+      if (!next) {
+        const error = new Error("Cover redirect left the allow-list");
+        error.status = 502;
+        throw error;
+      }
+      current = next;
+      continue;
+    }
+
+    if (!response.ok) {
+      const error = new Error(`Cover upstream returned ${response.status}`);
+      error.status = response.status;
+      throw error;
+    }
+
+    const buffer = await readCapped(response, cap);
+    const contentType = sniffImageType(buffer);
+    if (!contentType) {
+      const error = new Error("Cover upstream did not return an image");
+      error.status = 502;
+      throw error;
+    }
+
+    return { buffer, contentType };
+  }
+
+  const error = new Error("Too many cover redirects");
+  error.status = 502;
+  throw error;
 }
 
 // Returns { buffer, contentType } or { notFound: true }. A 404 is
@@ -442,6 +549,7 @@ function sendCover(res, entry) {
   res.writeHead(200, {
     "Content-Type": entry.contentType || "image/jpeg",
     "Content-Length": entry.buffer.length,
+    "X-Content-Type-Options": "nosniff",
     "Cache-Control": "public, max-age=604800, immutable"
   });
   res.end(entry.buffer);
@@ -450,15 +558,32 @@ function sendCover(res, entry) {
 export function sendJson(res, status, payload) {
   res.writeHead(status, {
     "Content-Type": "application/json; charset=utf-8",
-    "Cache-Control": "no-store"
+    "Cache-Control": "no-store",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "no-referrer"
   });
   res.end(JSON.stringify(payload));
+  // Callers do `return sendJson(...)` inside handleApi, and the router reads a
+  // truthy return as "this request was answered". Returning undefined here sent
+  // a second 404 over a response that was already written.
+  return true;
 }
 
 export async function handleApi(req, res, url) {
+  if (!rateLimitAllows(req)) {
+    res.writeHead(429, {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-store",
+      "Retry-After": "60"
+    });
+    res.end(JSON.stringify({ error: "Too many requests. Try again in a minute." }));
+    return true;
+  }
+
   if (req.method === "GET" && url.pathname === "/api/musicbrainz/discography") {
     const q = String(url.searchParams.get("q") || "").trim();
     if (q.length < 2) return sendJson(res, 400, { error: "Search query is too short." });
+    if (q.length > MAX_QUERY_LENGTH) return sendJson(res, 400, { error: "Search query is too long." });
 
     try {
       const releases = await musicBrainzArtistDiscography(q);
@@ -512,6 +637,7 @@ export async function handleApi(req, res, url) {
   if (req.method === "GET" && url.pathname === "/api/musicbrainz/search") {
     const q = String(url.searchParams.get("q") || "").trim();
     if (q.length < 2) return sendJson(res, 400, { error: "Search query is too short." });
+    if (q.length > MAX_QUERY_LENGTH) return sendJson(res, 400, { error: "Search query is too long." });
 
     try {
       // Search the release index by BOTH artist and release title. This means
@@ -583,6 +709,7 @@ export async function handleApi(req, res, url) {
   if (req.method === "GET" && url.pathname === "/api/itunes/search") {
     const q = String(url.searchParams.get("q") || "").trim();
     if (q.length < 2) return sendJson(res, 400, { error: "Search query is too short." });
+    if (q.length > MAX_QUERY_LENGTH) return sendJson(res, 400, { error: "Search query is too long." });
 
     try {
       const { artist, album } = parseArtistAlbumQuery(q);
@@ -747,7 +874,11 @@ export async function handleApi(req, res, url) {
   // providers directly, so the CSP can keep img-src 'self' and every byte
   // goes through the cache.
   if (req.method === "GET" && url.pathname === "/api/img") {
-    const remote = remoteFromProxyUrl(`/api/img?u=${url.searchParams.get("u") || ""}`);
+    const rawUrl = url.searchParams.get("u") || "";
+    if (rawUrl.length > MAX_PROXY_URL_LENGTH) {
+      return sendJson(res, 400, { error: "Unsupported image URL." });
+    }
+    const remote = remoteFromProxyUrl(`/api/img?u=${rawUrl}`);
     if (!remote) return sendJson(res, 400, { error: "Unsupported image host." });
 
     try {
@@ -827,14 +958,19 @@ export const SECURITY_HEADERS = {
   "X-Content-Type-Options": "nosniff",
   "Referrer-Policy": "no-referrer",
   "X-Frame-Options": "DENY",
+  "Strict-Transport-Security": "max-age=31536000",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
   // Bootstrap se empaqueta con el build (ya no hay link a jsdelivr), así que el
   // único origen de terceros son las fuentes de Google. Nada evalúa código: el
   // 'unsafe-inline' de script-src queda solo para el script del tema en el <head>,
   // que tiene que correr antes del primer pintado. El de style-src lo necesitan
   // los estilos en línea (--fill de las estrellas, marginLeft de los paneles).
+  // script-src-attr cierra la puerta a los manejadores onclick aunque
+  // 'unsafe-inline' siga abierto para el bloque del tema.
   "Content-Security-Policy": [
     "default-src 'self'",
     "script-src 'self' 'unsafe-inline'",
+    "script-src-attr 'none'",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: blob:",
@@ -842,7 +978,8 @@ export const SECURITY_HEADERS = {
     "worker-src 'self' blob:",
     "object-src 'none'",
     "base-uri 'self'",
-    "form-action 'self'"
+    "form-action 'self'",
+    "frame-ancestors 'none'"
   ].join("; ")
 };
 
@@ -852,7 +989,6 @@ const appServer = http.createServer(async (req, res) => {
     if (url.pathname.startsWith("/api/")) {
       const handled = await handleApi(req, res, url);
       if (handled) return;
-      console.error("[DEBUG404]", req.method, url.pathname, "headersSent:", res.headersSent, "ended:", res.writableEnded);
       return sendJson(res, 404, { error: "API route not found." });
     }
 

@@ -19,6 +19,11 @@ const THEME_OPTIONS = [
   ["system", "Según el sistema"]
 ];
 
+/* The way back to the CV. In production AlbumVault lives under /albumvault/, so
+   "/" is the portfolio; in dev it runs on its own port with the same base, where
+   "/" would still be AlbumVault and the CV is on :5173. */
+const CV_URL = import.meta.env.DEV ? "http://localhost:5173/" : "/";
+
 function ThemeMenu() {
   const { mode, setTheme } = useThemeContext();
   const { panelRef, triggerRef, open, toggle, close } = useDropdown({ role: "menu" });
@@ -171,6 +176,11 @@ export default function TopBar({
         </label>
 
         <div className="x-flex x-shrink-0 x-items-center x-gap-x-3">
+          <a className="bar-link" href={CV_URL} aria-label="Volver al CV de Nicolás" title="Volver al CV de Nicolás">
+            <span className="bar-link-arrow" aria-hidden="true">←</span>
+            <span className="x-hidden sm:x-d-inline">Volver al CV</span>
+            <span className="sm:x-d-none">CV</span>
+          </a>
           <ThemeMenu />
           {filtersPanel}
           <BackupMenu onExport={onExport} onImport={onImport} />

@@ -228,6 +228,7 @@
        cursor exactly at the moment a half-step is being chosen. */
     .av-btn:active,
     .toggle:active,
+    .bar-link:active,
     .chip:active,
     .icon-btn:active,
     .filter-panel .filter-chip:active,
@@ -250,7 +251,7 @@
        declare a `transition` of its own, or it silently wins over this and the
        control goes back to snapping. `.sleeve img` is the exception: it is a
        different element, fading the artwork, not the frame being pressed. */
-    .av-btn, .toggle, .chip, .pager button, .av-dropdown button, .track-tools button,
+    .av-btn, .toggle, .bar-link, .chip, .pager button, .av-dropdown button, .track-tools button,
     .album-foot button, .metadata-result, .switch-row, .sleeve, .icon-btn,
     .filter-panel .filter-chip, .filter-panel .filter-reset {
       transition: background-color .16s ease, color .16s ease,
@@ -379,6 +380,27 @@
     }
     .toggle-value { color: var(--bone); font-weight: 600; }
     .caret { color: var(--faint); font-size: 9px; }
+
+    /* The exit to the portfolio. Same silhouette as .toggle because it shares
+       the row, but it is a link: it navigates, it does not open anything. The
+       word shrinks to "CV" on a phone, where the whole bar competes for width. */
+    .bar-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 34px;
+      padding: 0 10px;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      color: var(--soft);
+      font-size: 12.5px;
+      font-weight: 500;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .bar-link:hover { color: var(--text); background: var(--hover); }
+    .bar-link-arrow { color: var(--faint); font-size: 13px; line-height: 1; }
+    .bar-link:hover .bar-link-arrow { color: var(--text); }
 
     /* The theme switch is the only toggle whose glyph carries its state: a sun, a
        moon, or half of each for "follow the system". The word next to it is

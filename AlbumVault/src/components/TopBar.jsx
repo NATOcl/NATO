@@ -175,7 +175,7 @@ export default function TopBar({
           </button>
         </label>
 
-        <div className="x-flex x-shrink-0 x-items-center x-gap-x-3">
+        <div className="topbar__actions x-flex x-items-center x-gap-x-3">
           <a className="bar-link" href={CV_URL} aria-label="Volver al CV de Nicolás" title="Volver al CV de Nicolás">
             <span className="bar-link-arrow" aria-hidden="true">←</span>
             <span className="x-hidden sm:x-d-inline">Volver al CV</span>

@@ -165,24 +165,40 @@ async function musicBrainzFetch(url) {
   // MusicBrainz is the slowest provider by design (one request every
   // 1.1s), so a repeat search is worth serving from memory rather than
   // making the user sit through the queue a second time.
-  return cached(jsonCache, `mb:${url}`, () =>
-    queueMusicBrainzRequest(async () => {
-      const response = await fetch(url, {
-        headers: {
-          "Accept": "application/json",
-          "User-Agent": USER_AGENT
-        }
-      });
-      if (!response.ok) {
-        const error = new Error(`MusicBrainz returned ${response.status}`);
-        error.status = response.status;
-        throw error;
+  return cached(jsonCache, `mb:${url}`, async () => {
+    // Un 503 de MusicBrainz casi siempre es su límite de tasa puntual, no una
+    // caída: se reintenta una vez en vez de devolver la lista vacía (que en la
+    // UI se lee como "no hay resultados"). Cada intento vuelve a pasar por la
+    // cola, así que el 1 req/1,1s se mantiene también al reintentar.
+    let lastError;
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      if (attempt > 0) await wait(1500);
+      try {
+        return await queueMusicBrainzRequest(async () => {
+          const response = await fetch(url, {
+            headers: {
+              "Accept": "application/json",
+              "User-Agent": USER_AGENT
+            }
+          });
+          if (!response.ok) {
+            const error = new Error(`MusicBrainz returned ${response.status}`);
+            error.status = response.status;
+            throw error;
+          }
+          const data = await response.json();
+          jsonCache.set(`mb:${url}`, data, JSON.stringify(data).length);
+          return data;
+        });
+      } catch (error) {
+        lastError = error;
+        // Un 404 o un JSON roto no mejoran por repetir la petición.
+        if (error.status !== 503 && error.status !== 429) break;
+        console.warn(`MusicBrainz ${error.status} en el intento ${attempt + 1}: ${url}`);
       }
-      const data = await response.json();
-      jsonCache.set(`mb:${url}`, data, JSON.stringify(data).length);
-      return data;
-    })
-  );
+    }
+    throw lastError;
+  });
 }
 
 

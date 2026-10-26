@@ -410,6 +410,19 @@
     .bar-link-arrow { color: var(--faint); font-size: 13px; line-height: 1; }
     .bar-link:hover .bar-link-arrow { color: var(--text); }
 
+    /* Las cinco acciones de la barra suman 369px y en un móvil de 320 solo hay
+       288 útiles: con `flex-shrink: 0` la fila no cedía y arrastraba la página
+       entera a 385px (scroll horizontal). Envolver es la única salida que no
+       pierde ningún control: a 320 caen en dos líneas, y desde ~401 vuelven a
+       una sola sin que haya un breakpoint que mantener. */
+    .topbar__actions {
+      flex-shrink: 1;
+      min-width: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      row-gap: 4px;
+    }
+
     /* The theme switch is the only toggle whose glyph carries its state: a sun, a
        moon, or half of each for "follow the system". The word next to it is
        dropped on a phone, so the glyph is all that is left there. */

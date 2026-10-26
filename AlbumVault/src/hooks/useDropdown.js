@@ -16,11 +16,16 @@ export function clampDropdown(element) {
   element.style.maxHeight = "";
   const rect = element.getBoundingClientRect();
   const margin = 8;
+  // `window.innerWidth` no vale como frontera: en un móvil que hace shrink-to-fit
+  // crece con el propio panel desbordado, así que el panel "cabe" siempre y la
+  // corrección se quedaba en los 8px del margen. El ancho del layout
+  // (`clientWidth`) no se mueve aunque el contenido se salga.
+  const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
 
   element.style.maxHeight = `${Math.round(Math.max(160, window.innerHeight - rect.top - margin))}px`;
 
   let shift = 0;
-  if (rect.right > window.innerWidth - margin) shift = window.innerWidth - margin - rect.right;
+  if (rect.right > viewportWidth - margin) shift = viewportWidth - margin - rect.right;
   if (rect.left + shift < margin) shift = margin - rect.left;
   if (shift) element.style.marginLeft = `${Math.round(shift)}px`;
 }

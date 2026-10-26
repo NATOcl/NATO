@@ -21,6 +21,7 @@ function migrate(albums) {
     row.musicbrainzId = row.musicbrainzId || null;
     row.musicbrainzReleaseGroupId = row.musicbrainzReleaseGroupId || null;
     row.itunesId = row.itunesId || null;
+    row.spotifyId = row.spotifyId || null;
 
     if ("audioDbId" in row) {
       delete row.audioDbId;

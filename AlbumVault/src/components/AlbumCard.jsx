@@ -46,7 +46,7 @@ export default function AlbumCard({ album, index, showArtist = true, coverUrl, o
           {songs} {songs === 1 ? "canción" : "canciones"}
         </span>
         <span className="album-actions">
-          <button onClick={() => onEdit(album.id)}>Editar</button>
+          <button onClick={() => onEdit(album)}>Editar</button>
           <button className="danger" onClick={() => onDelete(album.id)}>Eliminar</button>
         </span>
       </div>

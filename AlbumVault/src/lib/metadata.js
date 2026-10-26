@@ -1,6 +1,7 @@
 /* Búsqueda de metadatos e importación. Aquí vive todo lo que habla con
-   MusicBrainz y Apple/iTunes: la consulta en paralelo, el dedupe, el orden por
-   relevancia y las tres rutas de importación. La UI solo recibe datos.
+   MusicBrainz, Apple/iTunes y Spotify: la consulta en paralelo, el dedupe, el
+   orden por relevancia y las cuatro rutas de importación. La UI solo recibe
+   datos.
 
    Un fallo de proveedor devuelve [] en vez de reventar la búsqueda entera: se
    degrada el resultado, no la pantalla. */
@@ -8,7 +9,7 @@
 import { appApi, fetchCoverBlob, artistCreditName, parsePairQuery } from "./api.js";
 import { normalize, uid } from "./format.js";
 
-const SOURCE_LABEL = { musicbrainz: "MusicBrainz", itunes: "Apple/iTunes" };
+const SOURCE_LABEL = { musicbrainz: "MusicBrainz", itunes: "Apple/iTunes", spotify: "Spotify" };
 
 export function filteredMetadataResults(results, source) {
   if (source === "all") return results;
@@ -19,6 +20,7 @@ export function filteredMetadataResults(results, source) {
    importación vaya a dispararse. Es lo que usan aria-current y la restauración
    de foco, así que volver a pintar la lista no pierde la fila elegida. */
 export function metadataResultKey(release) {
+  if (release.source === "Spotify") return `spotify:${release.id}`;
   if (release.source === "Apple/iTunes") return `itunes:${release.id}`;
   if (release.releaseGroupId || release.matchType === "artist") {
     return `mb-group:${release.releaseGroupId || release.id}`;
@@ -26,16 +28,17 @@ export function metadataResultKey(release) {
   return `mb-release:${release.id}`;
 }
 
-/* MusicBrainz y Apple/iTunes no exponen ninguna métrica de popularidad: la
-   búsqueda de MB devuelve score=100 para todo, el browse de discografía no tiene
-   campo de score e iTunes no manda ninguno. "Lo más conocido primero" se
-   aproxima con lo canónico y lo bien catalogado que es un álbum, que es lo que
-   de verdad aparta los impostores que comparten título.
+/* Ninguno de los tres expone una métrica de popularidad: la búsqueda de MB
+   devuelve score=100 para todo, el browse de discografía no tiene campo de score,
+   iTunes no manda ninguno y Spotify quitó `popularity` en Development Mode
+   (febrero 2026). "Lo más conocido primero" se aproxima con lo canónico y lo
+   bien catalogado que es un álbum, que es lo que de verdad aparta los impostores
+   que comparten título.
 
    Pesos, de más fuerte a más flojo: artista y título exactos, un release group
    sin tipos secundarios (nada de bootlegs en vivo, remixes ni homenajes), tipo
    canónico y entrada completa. */
-const CANONICAL_SOURCE_BONUS = { MusicBrainz: 5, "Apple/iTunes": 0 };
+const CANONICAL_SOURCE_BONUS = { MusicBrainz: 5, Spotify: 2, "Apple/iTunes": 0 };
 
 function metadataRelevance(item, target) {
   const artist = item.artist || artistCreditName(item["artist-credit"]);
@@ -112,10 +115,22 @@ export async function searchMetadata(query, source, { signal } = {}) {
     );
   }
 
+  if (source === "all" || source === "spotify") {
+    tasks.push(
+      appApi(`/api/spotify/search?q=${encodeURIComponent(query)}`, { signal })
+        .then((data) => (Array.isArray(data?.albums) ? data.albums : []).map((a) => ({ ...a, source: "Spotify" })))
+        .catch((error) => {
+          if (error.name === "AbortError") throw error;
+          console.warn("Spotify search failed", error);
+          return [];
+        })
+    );
+  }
+
   const groups = await Promise.all(tasks);
   const raw = groups.flat();
 
-  const sourceOrder = { MusicBrainz: 0, "Apple/iTunes": 1 };
+  const sourceOrder = { MusicBrainz: 0, Spotify: 1, "Apple/iTunes": 2 };
 
   // Ordenar antes de deduplicar, para que la copia que se queda sea la canónica
   // de la fuente más fiable.
@@ -230,7 +245,39 @@ async function importItunesAlbum(albumId) {
     musicbrainzId: null,
     musicbrainzReleaseGroupId: null,
     itunesId: data?.id || albumId,
+    spotifyId: null,
     metadataSource: "Apple/iTunes",
+    fellBack,
+    coverFailed
+  };
+}
+
+/* Spotify trae las pistas en el mismo JSON del álbum, así que el fallback a
+   iTunes solo entra si llega sin canciones. La portada se pide aparte, igual
+   que en iTunes, para no meter 640px de imagen en la respuesta de búsqueda. */
+async function importSpotifyAlbum(albumId) {
+  const data = await appApi(`/api/spotify/album/${encodeURIComponent(albumId)}`);
+  const { songs, fellBack } = await autoImportSongsWithFallback({ source: "Spotify", data });
+
+  let coverBlob = null;
+  let coverFailed = false;
+  try {
+    coverBlob = await fetchCoverBlob(`/api/spotify/cover/${encodeURIComponent(albumId)}`);
+  } catch {
+    coverFailed = true;
+  }
+
+  return {
+    title: data?.title || "",
+    artist: data?.artist || "Artista desconocido",
+    year: data?.year || "",
+    songs: makeDraftSongs(songs),
+    coverBlob,
+    musicbrainzId: null,
+    musicbrainzReleaseGroupId: null,
+    itunesId: null,
+    spotifyId: data?.id || albumId,
+    metadataSource: "Spotify",
     fellBack,
     coverFailed
   };
@@ -279,6 +326,7 @@ async function importMusicBrainzRelease(mbid, resultKey) {
     musicbrainzId,
     musicbrainzReleaseGroupId: null,
     itunesId: null,
+    spotifyId: null,
     metadataSource: "MusicBrainz",
     fellBack,
     coverFailed
@@ -300,6 +348,9 @@ async function importMusicBrainzReleaseGroup(groupId) {
 /* Un solo punto de entrada para las tres rutas de la lista. Devuelve los campos
    para rellenar el formulario; la UI no sabe de dónde vino cada uno. */
 export async function importRelease(release) {
+  if (release.source === "Spotify") {
+    return { ...(await importSpotifyAlbum(release.id)), resultKey: metadataResultKey(release) };
+  }
   if (release.source === "Apple/iTunes") {
     return { ...(await importItunesAlbum(release.id)), resultKey: metadataResultKey(release) };
   }

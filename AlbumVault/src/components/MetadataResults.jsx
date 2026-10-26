@@ -10,6 +10,14 @@
 import { useEffect, useRef } from "react";
 import { metadataResultKey, releaseFacts, releaseTags } from "../lib/metadata.js";
 
+// La etiqueta de la derecha de la fila. Con "Todo" activo es el único dato que
+// dice de qué proveedor saldrá la importación.
+const SOURCE_LABELS = {
+  MusicBrainz: "MusicBrainz",
+  "Apple/iTunes": "Apple/iTunes",
+  Spotify: "Spotify"
+};
+
 function SkeletonRow() {
   return (
     <div className="metadata-slot is-loading" role="listitem" aria-hidden="true">
@@ -136,7 +144,7 @@ function MetadataRow({ release, index, chosen, disabled, onChoose }) {
           ) : null}
         </span>
 
-        <span className="metadata-src">{release.source === "Apple/iTunes" ? "Apple/iTunes" : "MusicBrainz"}</span>
+        <span className="metadata-src">{SOURCE_LABELS[release.source] || release.source}</span>
         <span className="metadata-go" aria-hidden="true">{chosen ? "✓" : "→"}</span>
       </button>
     </div>

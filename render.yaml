@@ -11,3 +11,11 @@ services:
         value: 22.12.0
       - key: NODE_ENV
         value: production
+      - key: MUSICBRAINZ_USER_AGENT
+        value: "NATO-CV/1.0 (https://nato-cv.onrender.com/)"
+      # Secretos: se piden en el panel de Render al sincronizar el Blueprint,
+      # nunca se escriben aquí.
+      - key: SPOTIFY_CLIENT_ID
+        sync: false
+      - key: SPOTIFY_CLIENT_SECRET
+        sync: false

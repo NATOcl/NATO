@@ -29,9 +29,16 @@
          cannot carry the pale bone of the dark palette, so light mode spends the
          same name as a deep ochre — same job, inverted lightness. */
       --bone: #856515;
-      /* The unfilled half of a half-star. 3.3:1 against the panel, so an album
-         you have not scored yet still looks like something you can click. */
-      --empty: #8a8375;
+      /* Stars carry their own pair, and it is the dark pair with the lightness
+         inverted: the score under the control is ochre, but a half-star painted
+         ochre next to a grey one reads as two colours fighting, not as one star
+         half lit. Dark does cream + mid grey; paper cannot carry cream, so the
+         lit half is the ink and the unlit half a warm grey. --star-off stays
+         above 3:1 against the panel (3.4:1) and against the page (3.1:1): an
+         album you have not scored yet still has to look like something you can
+         click. */
+      --star-on: var(--text);
+      --star-off: #8f8a7f;
       --on-bone: #fffdf8;
       --pencil: #bd4529;
 
@@ -96,7 +103,8 @@
       --muted: #979494;
       --faint: #807d7d;
       --bone: #f0e9dc;
-      --empty: #6a6a6a;
+      --star-on: var(--bone);
+      --star-off: #6a6a6a;
       --on-bone: #17140f;
       --pencil: #c9563f;
 
@@ -682,7 +690,7 @@
       cursor: not-allowed;
     }
 
-    /* Provider switch: a segmented control, not four separate buttons. */
+    /* Provider switch: a segmented control, not separate pills. */
     .chip {
       height: 26px;
       padding: 0 9px;
@@ -852,15 +860,22 @@
       touch-action: none;
     }
     .star-picker:hover { background: var(--hover); }
-    .star-picker[aria-valuenow="0"] { color: var(--faint); }
+    /* El glifo no llena su celda: mide 0,83em (20,8px de los 26px) y sin
+       text-align se apoya en el borde izquierdo. El degradado del relleno se
+       reparte sobre la celda entera, así que su corte del 50% caía al 65% de la
+       estrella y una media estrella se veía casi entera. Centrado, el corte
+       coincide con el eje del glifo. */
     .star {
       display: inline-block;
       width: 26px;
       height: 26px;
       font-size: 25px;
       line-height: 26px;
+      text-align: center;
       color: transparent;
-      background-image: linear-gradient(90deg, var(--bone) var(--fill, 0%), var(--empty) var(--fill, 0%));
+      /* Two tokens, one per half. They are not --bone on purpose: a half-star
+         needs the lit and unlit halves to differ in lightness, not in hue. */
+      background-image: linear-gradient(90deg, var(--star-on) var(--fill, 0%), var(--star-off) var(--fill, 0%));
       -webkit-background-clip: text;
       background-clip: text;
     }
@@ -1186,14 +1201,21 @@
        and .chip are 34px and 26px everywhere else. */
     .import-row .av-btn { height: 36px; }
     .import-row .segmented .chip { height: 34px; }
-    /* A segmented control needs a frame to segment; the three chips used to be
-       three loose buttons with a gap between them. No overflow:hidden, or the
+    /* A segmented control needs a frame to segment; the provider chips used to
+       be loose buttons with a gap between them. No overflow:hidden, or the
        focus ring of the outer chips gets clipped. */
     .segmented { display: inline-flex; border: 1px solid var(--line); border-radius: 2px; }
     .segmented .chip { border-radius: 0; }
     .segmented .chip:first-child { border-radius: 1px 0 0 1px; }
     .segmented .chip:last-child { border-radius: 0 1px 1px 0; }
     .segmented .chip + .chip { box-shadow: -1px 0 0 var(--line); }
+    /* Cuatro proveedores no caben en los 236px útiles de un móvil de 320: el
+       control toma la fila entera y los chips se reparten, en vez de desbordar
+       la banda de importación. A partir de 360px ya entra sin tocar nada. */
+    @media (max-width: 359px) {
+      .segmented { display: flex; width: 100%; }
+      .segmented .chip { flex: 1 1 auto; padding: 0 4px; font-size: 10.5px; }
+    }
     .import-keys { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 5px; margin-top: 8px; }
     .import-keys .form-hint { margin-top: 0; }
     @media (hover: none) { .import-keys { display: none; } }

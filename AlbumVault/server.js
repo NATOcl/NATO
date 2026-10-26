@@ -1,3 +1,5 @@
+// Primero el entorno: el resto del módulo lee las credenciales al evaluarse.
+import "./env.js";
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
@@ -17,6 +19,20 @@ const ITUNES_BASE = "https://itunes.apple.com";
 const ITUNES_COUNTRY = (process.env.ITUNES_COUNTRY || "es").toLowerCase();
 const ITUNES_FALLBACK_COUNTRY = "us";
 const USER_AGENT = process.env.MUSICBRAINZ_USER_AGENT || "AlbumVault/1.0 (http://localhost:3000)";
+
+// Spotify: token de aplicación (Client Credentials). El secret no sale nunca
+// de aquí; el navegador solo ve /api/spotify/*. Development Mode exige que la
+// cuenta dueña de la app tenga Premium, o la API deja de responder.
+const SPOTIFY_ACCOUNTS_BASE = "https://accounts.spotify.com";
+const SPOTIFY_API_BASE = "https://api.spotify.com/v1";
+const SPOTIFY_CLIENT_ID = String(process.env.SPOTIFY_CLIENT_ID || "").trim();
+const SPOTIFY_CLIENT_SECRET = String(process.env.SPOTIFY_CLIENT_SECRET || "").trim();
+// /search admite 10 por página como máximo desde febrero de 2026 (antes 50).
+const SPOTIFY_SEARCH_PAGE = 10;
+const SPOTIFY_SEARCH_PAGES = 2;
+// Un id de Spotify es base62 de 22 caracteres. Validarlo evita que un id con
+// "../" o "?" salga de la ruta que hemos construido.
+const SPOTIFY_ID = /^[A-Za-z0-9]{22}$/;
 
 let lastMusicBrainzRequestAt = 0;
 let musicBrainzQueue = Promise.resolve();
@@ -195,6 +211,95 @@ async function iTunesFetch(url) {
   });
 }
 
+/* ------------------------------------------------------------------ *
+ * Spotify
+ *
+ * Token de aplicación (Client Credentials): sirve para catálogo, no para
+ * datos del usuario, y por eso no necesita login ni redirect URI. Se guarda
+ * en memoria hasta poco antes de caducar; un 401 lo tira para pedir otro.
+ * ------------------------------------------------------------------ */
+
+let spotifyToken = null;
+let spotifyTokenRequest = null;
+
+async function getSpotifyToken() {
+  if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET) {
+    const error = new Error("Spotify is not configured");
+    error.status = 503;
+    throw error;
+  }
+
+  if (spotifyToken && spotifyToken.expiresAt > Date.now()) return spotifyToken.value;
+
+  // Una sola petición en vuelo: dos búsquedas a la vez no piden dos tokens.
+  if (!spotifyTokenRequest) {
+    spotifyTokenRequest = (async () => {
+      const response = await fetch(`${SPOTIFY_ACCOUNTS_BASE}/api/token`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": `Basic ${Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`).toString("base64")}`
+        },
+        body: "grant_type=client_credentials"
+      });
+
+      if (!response.ok) {
+        const error = new Error(`Spotify token returned ${response.status}`);
+        error.status = 502;
+        throw error;
+      }
+
+      const data = await response.json();
+      const value = String(data?.access_token || "");
+      if (!value) {
+        const error = new Error("Spotify token response was empty");
+        error.status = 502;
+        throw error;
+      }
+
+      spotifyToken = {
+        value,
+        // Un minuto de margen: un token que caduca a mitad de la petición es un 401.
+        expiresAt: Date.now() + ((Number(data.expires_in) || 3600) - 60) * 1000
+      };
+      return value;
+    })().finally(() => { spotifyTokenRequest = null; });
+  }
+
+  return spotifyTokenRequest;
+}
+
+async function spotifyFetch(pathname, params) {
+  const token = await getSpotifyToken();
+  const url = new URL(`${SPOTIFY_API_BASE}${pathname}`);
+  for (const [key, value] of Object.entries(params || {})) {
+    if (value !== undefined && value !== null) url.searchParams.set(key, String(value));
+  }
+
+  return cached(jsonCache, `spotify:${url}`, async () => {
+    const response = await fetch(url, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Accept": "application/json"
+      }
+    });
+
+    // Token revocado o caducado antes de tiempo: se olvida para que la
+    // siguiente petición pida otro. Un error no se cachea nunca.
+    if (response.status === 401) spotifyToken = null;
+
+    if (!response.ok) {
+      const error = new Error(`Spotify returned ${response.status}`);
+      error.status = response.status;
+      throw error;
+    }
+
+    const data = await response.json();
+    jsonCache.set(`spotify:${url}`, data, JSON.stringify(data).length);
+    return data;
+  });
+}
+
 function parseArtistAlbumQuery(q) {
   const parts = String(q || "").split(/\s+[—–-]\s+/);
   if (parts.length >= 2) {
@@ -228,6 +333,55 @@ function normalizeItunesAlbum(item, matchType = "album") {
     collectionType,
     source: "Apple/iTunes",
     matchType
+  };
+}
+
+// Spotify manda las imágenes de mayor a menor, pero no se da por hecho: la
+// miniatura quiere la más pequeña que siga nítida a 2x y la importación la mayor.
+function pickSpotifyImage(images, { minWidth = 0, largest = false } = {}) {
+  const list = (Array.isArray(images) ? images : [])
+    .filter(image => image?.url)
+    .map(image => ({ url: String(image.url), width: Number(image.width) || 0 }))
+    .sort((a, b) => a.width - b.width);
+  if (!list.length) return null;
+  if (largest) return list[list.length - 1];
+  return list.find(image => image.width >= minWidth) || list[list.length - 1];
+}
+
+function spotifyArtistNames(item) {
+  return (Array.isArray(item?.artists) ? item.artists : [])
+    .map(artist => artist?.name || "")
+    .filter(Boolean)
+    .join(", ");
+}
+
+function normalizeSpotifyAlbum(item, matchType = "album") {
+  const image = pickSpotifyImage(item?.images, { minWidth: 300 });
+  const releaseDate = String(item?.release_date || "");
+
+  return {
+    id: item?.id ? String(item.id) : "",
+    title: item?.name || "",
+    artist: spotifyArtistNames(item),
+    year: releaseDate.slice(0, 4),
+    date: releaseDate,
+    coverUrl: image ? imageProxyUrl(image.url) : "",
+    trackCount: Number(item?.total_tracks) || 0,
+    // album_type es album|single|compilation: el cliente ya pinta el tipo
+    // primario cuando no es "album", así que no hay que traducirlo aquí.
+    primaryType: item?.album_type || "",
+    secondaryTypes: [],
+    disambiguation: "",
+    source: "Spotify",
+    matchType
+  };
+}
+
+function toSpotifySong(track, index) {
+  return {
+    title: String(track?.name || "").trim(),
+    position: Number(track?.track_number) || index + 1,
+    duration: Number(track?.duration_ms) || 0
   };
 }
 
@@ -343,7 +497,9 @@ const MAX_PROXY_URL_LENGTH = 4096;
 const IMAGE_HOST_ALLOWLIST = new Set([
   "mzstatic.com",
   "coverartarchive.org",
-  "archive.org"
+  "archive.org",
+  "i.scdn.co",
+  "mosaic.scdn.co"
 ]);
 
 function hostAllowed(hostname) {
@@ -835,6 +991,129 @@ export async function handleApi(req, res, url) {
     return true;
   }
 
+  if (req.method === "GET" && url.pathname === "/api/spotify/search") {
+    const q = String(url.searchParams.get("q") || "").trim();
+    if (q.length < 2) return sendJson(res, 400, { error: "Search query is too short." });
+    if (q.length > MAX_QUERY_LENGTH) return sendJson(res, 400, { error: "Search query is too long." });
+
+    try {
+      const { artist, album } = parseArtistAlbumQuery(q);
+      // Spotify no entiende "Artista — Álbum": la búsqueda libre con las dos
+      // partes ordena igual de bien y no depende de la sintaxis de campos.
+      const term = artist && album ? `${artist} ${album}` : q;
+
+      // La primera página manda; la segunda solo alarga la lista. Si la cuota
+      // corta la segunda, la búsqueda sigue devolviendo diez resultados.
+      const [first, second] = await Promise.all([
+        spotifyFetch("/search", { q: term, type: "album", limit: SPOTIFY_SEARCH_PAGE, offset: 0 }),
+        spotifyFetch("/search", {
+          q: term,
+          type: "album",
+          limit: SPOTIFY_SEARCH_PAGE,
+          offset: SPOTIFY_SEARCH_PAGE
+        }).catch(error => {
+          console.warn("Spotify second search page failed", error.message);
+          return null;
+        })
+      ]);
+
+      const seen = new Set();
+      const albums = [];
+      for (const page of [first, second]) {
+        for (const item of page?.albums?.items || []) {
+          const normalized = normalizeSpotifyAlbum(item, artist && album ? "artist+album" : "album");
+          if (!normalized.id || seen.has(normalized.id)) continue;
+          seen.add(normalized.id);
+          albums.push(normalized);
+        }
+      }
+
+      sendJson(res, 200, { albums });
+      warmReleaseCovers(albums);
+    } catch (error) {
+      console.error("Spotify search error", error);
+      sendJson(res, error.status === 429 ? 429 : error.status === 503 ? 503 : 502, {
+        error: error.status === 503
+          ? "Spotify no está configurado en este servidor."
+          : "Spotify no está disponible ahora mismo."
+      });
+    }
+    return true;
+  }
+
+  const spotifyAlbumMatch = url.pathname.match(/^\/api\/spotify\/album\/([A-Za-z0-9]{22})$/);
+  if (req.method === "GET" && spotifyAlbumMatch) {
+    const id = spotifyAlbumMatch[1];
+    try {
+      const data = await spotifyFetch(`/albums/${id}`, { limit: 50 });
+      const embedded = Array.isArray(data?.tracks?.items) ? data.tracks.items : [];
+      const songs = embedded.map(toSpotifySong).filter(song => song.title);
+
+      // Un recopilatorio puede pasar de 50 pistas: se pide el resto en vez de
+      // guardar el álbum a medias. Una página extra cubre cualquier caso real.
+      if (Number(data?.tracks?.total) > embedded.length) {
+        const rest = await spotifyFetch(`/albums/${id}/tracks`, {
+          offset: embedded.length,
+          limit: 50
+        }).catch(() => null);
+        for (const track of rest?.items || []) {
+          const song = toSpotifySong(track, songs.length);
+          if (song.title) songs.push(song);
+        }
+      }
+
+      const cover = pickSpotifyImage(data?.images, { largest: true });
+
+      sendJson(res, 200, {
+        id,
+        title: data?.name || "",
+        artist: spotifyArtistNames(data),
+        year: String(data?.release_date || "").slice(0, 4),
+        coverUrl: cover ? imageProxyUrl(cover.url) : "",
+        songs,
+        source: "Spotify"
+      });
+    } catch (error) {
+      console.error("Spotify album error", error);
+      // Spotify contesta 400 (no 404) a un id inexistente: para el cliente el
+      // resultado es el mismo, el álbum no está.
+      const missing = error.status === 400 || error.status === 404;
+      const status = missing ? 404
+        : error.status === 429 || error.status === 503 ? error.status
+          : 502;
+      sendJson(res, status, {
+        error: status === 503
+          ? "Spotify no está configurado en este servidor."
+          : missing
+            ? "Ese álbum no existe en Spotify."
+            : "No se pudo cargar ese álbum de Spotify."
+      });
+    }
+    return true;
+  }
+
+  const spotifyCoverMatch = url.pathname.match(/^\/api\/spotify\/cover\/([A-Za-z0-9]{22})$/);
+  if (req.method === "GET" && spotifyCoverMatch) {
+    const id = spotifyCoverMatch[1];
+    try {
+      const data = await spotifyFetch(`/albums/${id}`, { limit: 1 });
+      const image = pickSpotifyImage(data?.images, { largest: true });
+      if (!image) {
+        res.writeHead(404);
+        return res.end();
+      }
+
+      const entry = await resolveCover(`spotify:${id}`, () => loadImage(image.url));
+      sendCover(res, entry);
+    } catch (error) {
+      console.error("Spotify cover error", error);
+      const missing = error.status === 400 || error.status === 404;
+      res.writeHead(error.status === 413 ? 413 : missing ? 404 : 502);
+      res.end();
+    }
+    return true;
+  }
+
   const coverGroupMatch = url.pathname.match(/^\/api\/cover-art-group\/([0-9a-fA-F-]{36})\/front-(250|500|1200)$/);
   if (req.method === "GET" && coverGroupMatch) {
     const id = coverGroupMatch[1];
@@ -1033,6 +1312,11 @@ if (isMain) {
   appServer.listen(PORT, () => {
     console.log(`AlbumVault running at http://localhost:${PORT}`);
     console.log(`MusicBrainz User-Agent: ${USER_AGENT}`);
+    console.log(
+      SPOTIFY_CLIENT_ID && SPOTIFY_CLIENT_SECRET
+        ? "Spotify: credenciales cargadas (Client Credentials)."
+        : "Spotify: sin credenciales. Define SPOTIFY_CLIENT_ID y SPOTIFY_CLIENT_SECRET."
+    );
     if (!fs.existsSync(path.join(DIST, "index.html"))) {
       console.log("dist/ todavía no existe: `npm run build`, o `npm run dev` para el servidor de Vite en el 5173.");
     }

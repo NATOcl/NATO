@@ -126,7 +126,7 @@ export const projects = [
     technology: "html · css",
     title: "Tienda de mascotas en HTML puro",
     description: "Catálogo de mascotas sin frameworks.",
-    href: "https://natocl.github.io/pets",
+    href: "https://natocl.github.io",
   },
   {
     technology: "kotlin · android studio",

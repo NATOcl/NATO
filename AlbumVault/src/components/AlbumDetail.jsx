@@ -125,7 +125,7 @@ export default function AlbumDetail({ album, coverUrl, onCatalog, onArtist, onEd
             <span id="detailYear">{album.year}</span>
           </div>
 
-          <button id="editAlbumDetail" className="av-btn x-mt-7" onClick={() => onEdit(album.id)}>
+          <button id="editAlbumDetail" className="av-btn x-mt-7" onClick={() => onEdit(album)}>
             Editar título, portada y año
           </button>
         </div>

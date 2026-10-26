@@ -3,6 +3,11 @@ dist/
 .DS_Store
 Thumbs.db
 
+# Credenciales locales (Spotify, etc.). Nunca se publican.
+.env
+.env.*
+!.env.example
+
 # OpenCode / agent tooling
 .opencode/
 .agents/

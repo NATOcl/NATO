@@ -49,6 +49,7 @@ export async function buildBackup() {
       musicbrainzId: album.musicbrainzId || null,
       musicbrainzReleaseGroupId: album.musicbrainzReleaseGroupId || null,
       itunesId: album.itunesId || null,
+      spotifyId: album.spotifyId || null,
       // TheAudioDB ya no existe: una copia vieja que lo mencione no debe
       // seguir reclamando un proveedor con el que la app ya no habla.
       metadataSource: album.metadataSource === "TheAudioDB" ? null : album.metadataSource || null,
@@ -114,6 +115,7 @@ export function validateBackup(data) {
       musicbrainzId: raw.musicbrainzId || null,
       musicbrainzReleaseGroupId: raw.musicbrainzReleaseGroupId || null,
       itunesId: raw.itunesId || null,
+      spotifyId: raw.spotifyId || null,
       metadataSource: raw.metadataSource === "TheAudioDB" ? null : raw.metadataSource || null,
       songs: Array.isArray(raw.songs) ? raw.songs.map(normalizeSong) : [],
       cover: dataURLToBlob(raw.cover || null),

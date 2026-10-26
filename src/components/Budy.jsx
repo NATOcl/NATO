@@ -1,5 +1,5 @@
 import { useState } from "react";
-import budy from "../assets/budy.gif";
+import budy from "../assets/budy.webp";
 
 export default function Budy() {
   const [visible, setVisible] = useState(true);
@@ -25,8 +25,8 @@ export default function Budy() {
           className="budy__image"
           src={budy}
           alt="Budy, mascota del portafolio"
-          width="360"
-          height="450"
+          width="240"
+          height="300"
           loading="lazy"
           decoding="async"
           draggable={false}

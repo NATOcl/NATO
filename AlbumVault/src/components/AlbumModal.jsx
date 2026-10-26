@@ -15,7 +15,8 @@ import { filteredMetadataResults, importRelease, searchMetadata } from "../lib/m
 const PROVIDERS = [
   ["all", "Todo"],
   ["musicbrainz", "MusicBrainz"],
-  ["itunes", "Apple/iTunes"]
+  ["itunes", "Apple/iTunes"],
+  ["spotify", "Spotify"]
 ];
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -54,7 +55,8 @@ export default function AlbumModal({ album, albums, onClose, onSave, onToast }) 
   const [ids, setIds] = useState({
     musicbrainzId: album?.musicbrainzId || null,
     musicbrainzReleaseGroupId: album?.musicbrainzReleaseGroupId || null,
-    itunesId: album?.itunesId || null
+    itunesId: album?.itunesId || null,
+    spotifyId: album?.spotifyId || null
   });
 
   const backdropRef = useRef(null);
@@ -87,7 +89,8 @@ export default function AlbumModal({ album, albums, onClose, onSave, onToast }) 
     setIds({
       musicbrainzId: album?.musicbrainzId || null,
       musicbrainzReleaseGroupId: album?.musicbrainzReleaseGroupId || null,
-      itunesId: album?.itunesId || null
+      itunesId: album?.itunesId || null,
+      spotifyId: album?.spotifyId || null
     });
     // El foco entra en el título, que es lo primero que se escribe.
     const timer = setTimeout(() => titleRef.current?.focus(), 30);
@@ -177,9 +180,11 @@ const submit = async (event) => {
       musicbrainzId: ids.musicbrainzId,
       musicbrainzReleaseGroupId: ids.musicbrainzReleaseGroupId,
       itunesId: ids.itunesId,
-      metadataSource: ids.itunesId ? "Apple/iTunes"
-        : ids.musicbrainzId ? "MusicBrainz"
-          : existing?.metadataSource || null,
+      spotifyId: ids.spotifyId,
+      metadataSource: ids.spotifyId ? "Spotify"
+        : ids.itunesId ? "Apple/iTunes"
+          : ids.musicbrainzId ? "MusicBrainz"
+            : existing?.metadataSource || null,
       cover: coverBlob || existing?.cover || null,
       songs: songs
         .map((song, index) => ({
@@ -219,7 +224,7 @@ const submit = async (event) => {
     }
 
     setSearching(true);
-    setStatus({ message: "Buscando en MusicBrainz y Apple/iTunes a la vez…", type: "info" });
+    setStatus({ message: "Buscando en MusicBrainz, Apple/iTunes y Spotify a la vez…", type: "info" });
 
     searchAbort.current?.abort();
     const controller = new AbortController();
@@ -259,12 +264,13 @@ const submit = async (event) => {
       setSongs(imported.songs.map((song, index) => ({ ...song, position: index })));
       if (imported.coverBlob) {
         setCoverBlob(imported.coverBlob);
-        setCoverName(`Portada de ${imported.title || "Apple/iTunes"}. Haz clic para cambiarla.`);
+        setCoverName(`Portada de ${imported.title || imported.metadataSource}. Haz clic para cambiarla.`);
       }
       setIds({
         musicbrainzId: imported.musicbrainzId,
         musicbrainzReleaseGroupId: imported.musicbrainzReleaseGroupId,
-        itunesId: imported.itunesId
+        itunesId: imported.itunesId,
+        spotifyId: imported.spotifyId
       });
       setChosenKey(imported.resultKey);
 
@@ -525,7 +531,7 @@ const submit = async (event) => {
                 }}
                 placeholder="Blondie — Parallel Lines"
                 autoComplete="off"
-                aria-label="Buscar el álbum en MusicBrainz y Apple/iTunes"
+                aria-label="Buscar el álbum en MusicBrainz, Apple/iTunes y Spotify"
               />
               <button id="mbSearchButton" type="button" className="av-btn x-shrink-0" disabled={searching || importing} onClick={runSearch}>
                 {searching ? "Buscando…" : "Buscar"}
@@ -550,7 +556,7 @@ const submit = async (event) => {
                   <span className="num">{results.length}</span> {results.length === 1 ? "resultado" : "resultados"}
                   {merged ? (
                     <span className="src">
-                      {merged} {merged === 1 ? "aparecía también" : "aparecían también"} en la otra fuente
+                      {merged} {merged === 1 ? "aparecía también" : "aparecían también"} en otra fuente
                     </span>
                   ) : null}
                 </>

@@ -38,6 +38,7 @@ const MIME = {
 const ASSET_EXTENSIONS = new Set([
   ".js",
   ".css",
+  ".json",
   ".svg",
   ".png",
   ".jpg",
@@ -220,6 +221,16 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/" || url.pathname === "/index.html") {
       serveCvIndex(req, res);
       return;
+    }
+
+    if (url.pathname.startsWith("/data/")) {
+      const file = resolveAsset(CV_DIST, url.pathname);
+      if (sendFile(req, res, file, {
+        headers: CV_ASSET_HEADERS,
+        cacheControl: "public, max-age=300",
+      })) {
+        return;
+      }
     }
 
     if (url.pathname.startsWith("/assets/")) {

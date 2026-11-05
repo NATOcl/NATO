@@ -58,21 +58,25 @@ export default function Header() {
   const isCurrent = (href) => activeSection === href.slice(1);
 
   return (
-    <header className="site-header">
+    <header className="site-header navbar navbar-expand-lg">
       <div className="site-header__inner">
-        <a href="#top" className="brand" onClick={closeMenu}>
+        <a
+          href="#top"
+          className="brand navbar-brand"
+          onClick={closeMenu}
+        >
           <span className="brand__mark" aria-hidden="true">
             NT
           </span>
           <span className="brand__name">{profile.shortName}</span>
         </a>
 
-        <nav className="nav" aria-label="Principal">
+        <nav className="nav navbar-nav" aria-label="Principal">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="nav__link"
+              className="nav__link nav-link"
               aria-current={isCurrent(link.href) ? "location" : undefined}
             >
               {link.label}

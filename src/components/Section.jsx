@@ -6,6 +6,7 @@ export default function Section({
   title,
   children,
   divider = true,
+  wide = false,
 }) {
   return (
     <>
@@ -14,7 +15,9 @@ export default function Section({
           <Reveal as="h2" className="section-tag">
             {index} - {title}
           </Reveal>
-          <div className="section__body">{children}</div>
+          <div className={`section__body${wide ? " section__body--wide" : ""}`}>
+            {children}
+          </div>
         </div>
       </section>
       {divider && <hr className="rule" />}

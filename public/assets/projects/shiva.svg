@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="title desc">
+  <title id="title">Shiva</title>
+  <desc id="desc">Teléfono móvil con una hoja y datos de cultivo.</desc>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#1e2e3a" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="#0e1a24"/>
+  <rect width="800" height="450" fill="url(#grid)"/>
+  <path d="M0 0h44M0 0v44M800 450h-44M800 450v-44" stroke="#63a8d2" stroke-width="2"/>
+  <rect x="46" y="44" width="708" height="362" fill="none" stroke="#7fa8be" stroke-opacity=".28"/>
+
+  <g transform="translate(536 224)">
+    <rect x="-92" y="-158" width="184" height="316" rx="24" fill="#13222e" stroke="#7fa8be" stroke-width="2"/>
+    <rect x="-74" y="-132" width="148" height="252" fill="#0e1a24"/>
+    <rect x="-32" y="-148" width="64" height="6" rx="3" fill="#7fa8be"/>
+    <path d="M-36 34c0-56 34-96 82-108-6 52-36 94-82 108Z" fill="#63a8d2"/>
+    <path d="M-36 34c28-22 50-50 64-86" fill="none" stroke="#0e1a24" stroke-width="3"/>
+    <path d="M-36 34h-18" stroke="#63a8d2" stroke-width="3"/>
+    <g fill="#7fa8be" font-family="'IBM Plex Mono', Consolas, monospace" font-size="9" letter-spacing="1">
+      <text x="-74" y="-108">CULTIVO · A</text>
+      <text x="-74" y="72">HUMEDAD</text>
+      <text x="-74" y="86" fill="#e9ede6" font-size="15">64 %</text>
+      <text x="-74" y="114">RIEGO</text>
+      <text x="-74" y="128" fill="#e4572e" font-size="15">HOY</text>
+    </g>
+    <rect x="-74" y="62" width="148" height="2" fill="#1e2e3a"/>
+    <rect x="-74" y="104" width="148" height="2" fill="#1e2e3a"/>
+  </g>
+
+  <g fill="#e9ede6" font-family="'Space Grotesk', 'Segoe UI', sans-serif">
+    <text x="76" y="116" font-size="48" font-weight="600" letter-spacing="-2">Shiva</text>
+    <text x="76" y="148" fill="#7fa8be" font-family="'IBM Plex Mono', Consolas, monospace" font-size="13" letter-spacing="3">AGRICULTURA MÓVIL</text>
+  </g>
+  <g font-family="'IBM Plex Mono', Consolas, monospace" font-size="12" letter-spacing="1.4">
+    <text x="76" y="292" fill="#7fa8be">KOTLIN</text>
+    <text x="76" y="314" fill="#7fa8be">ANDROID STUDIO</text>
+    <text x="76" y="336" fill="#63a8d2">REGISTRO DE CULTIVOS</text>
+  </g>
+  <path d="M76 368h120" stroke="#e4572e" stroke-width="2"/>
+  <circle cx="226" cy="368" r="4" fill="#e4572e"/>
+</svg>

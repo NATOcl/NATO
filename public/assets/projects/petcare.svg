@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="title desc">
+  <title id="title">PetCare</title>
+  <desc id="desc">Cruz veterinaria, huella y tarjetas de servicios.</desc>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#1e2e3a" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="#0e1a24"/>
+  <rect width="800" height="450" fill="url(#grid)"/>
+  <path d="M0 0h44M0 0v44M800 450h-44M800 450v-44" stroke="#63a8d2" stroke-width="2"/>
+  <rect x="46" y="44" width="708" height="362" fill="none" stroke="#7fa8be" stroke-opacity=".28"/>
+
+  <g transform="translate(556 220)">
+    <circle r="132" fill="#13222e" stroke="#7fa8be" stroke-opacity=".5"/>
+    <path d="M-34-96h68v62h62v68h-62v62h-68v-62h-62v-68h62Z" fill="#63a8d2"/>
+    <g fill="#e4572e">
+      <ellipse cx="-58" cy="82" rx="14" ry="18" transform="rotate(-24 -58 82)"/>
+      <ellipse cx="-24" cy="66" rx="13" ry="18" transform="rotate(-8 -24 66)"/>
+      <ellipse cx="12" cy="66" rx="13" ry="18" transform="rotate(8 12 66)"/>
+      <ellipse cx="46" cy="82" rx="14" ry="18" transform="rotate(24 46 82)"/>
+      <ellipse cx="-6" cy="104" rx="22" ry="18"/>
+    </g>
+  </g>
+
+  <g transform="translate(76 210)">
+    <rect x="0" y="0" width="196" height="62" fill="#e9ede6"/>
+    <rect x="0" y="0" width="4" height="62" fill="#63a8d2"/>
+    <text x="18" y="26" fill="#0e1a24" font-family="'IBM Plex Mono', Consolas, monospace" font-size="10" letter-spacing="1.6">CONSULTA</text>
+    <rect x="18" y="38" width="128" height="6" fill="#7fa8be"/>
+    <rect x="0" y="76" width="196" height="62" fill="#13222e" stroke="#7fa8be" stroke-opacity=".4"/>
+    <text x="18" y="102" fill="#7fa8be" font-family="'IBM Plex Mono', Consolas, monospace" font-size="10" letter-spacing="1.6">ESPECIALIDADES</text>
+    <rect x="18" y="114" width="150" height="6" fill="#1e2e3a"/>
+    <rect x="0" y="152" width="196" height="62" fill="#13222e" stroke="#7fa8be" stroke-opacity=".4"/>
+    <text x="18" y="178" fill="#7fa8be" font-family="'IBM Plex Mono', Consolas, monospace" font-size="10" letter-spacing="1.6">CONTACTO</text>
+    <rect x="18" y="190" width="106" height="6" fill="#1e2e3a"/>
+  </g>
+
+  <g fill="#e9ede6" font-family="'Space Grotesk', 'Segoe UI', sans-serif">
+    <text x="76" y="116" font-size="44" font-weight="600" letter-spacing="-1.6">PetCare</text>
+    <text x="76" y="148" fill="#7fa8be" font-family="'IBM Plex Mono', Consolas, monospace" font-size="13" letter-spacing="3">VETERINARIA</text>
+  </g>
+  <g fill="#7fa8be" font-family="'IBM Plex Mono', Consolas, monospace" font-size="12" letter-spacing="1.6">
+    <text x="76" y="396">REACT · VITE · ROUTER</text>
+  </g>
+  <circle cx="704" cy="72" r="6" fill="#e4572e"/>
+</svg>

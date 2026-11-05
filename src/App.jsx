@@ -6,6 +6,7 @@ import Courses from "./components/Courses";
 import Education from "./components/Education";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
+import News from "./components/News";
 import Portfolio from "./components/Portfolio";
 import Skills from "./components/Skills";
 
@@ -22,6 +23,7 @@ export default function App() {
         <Education />
         <Skills />
         <Portfolio />
+        <News />
         <Certificates />
         <Courses />
       </main>

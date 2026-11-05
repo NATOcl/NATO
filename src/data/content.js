@@ -10,6 +10,7 @@ export const navLinks = [
   { href: "#educacion", label: "Educación" },
   { href: "#conocimientos", label: "Conocimientos" },
   { href: "#portafolio", label: "Portafolio" },
+  { href: "#noticias", label: "Noticias" },
   { href: "#certificados", label: "Certificados" },
   { href: "#cursos", label: "Cursos" },
   { href: "#contacto", label: "Contacto" },
@@ -34,6 +35,10 @@ export const hero = {
   eyebrow: "nicolas troncoso olivares",
   title: "NATOcl",
   lead: "Actualmente estudio Ingeniería en Informática en Duoc UC, después de formarme como Técnico en Radiodiagnóstico y Radioterapia. Me apasiona el desarrollo de software y la inteligencia artificial.",
+  portraitAlt:
+    "Retrato ilustrado de Nicolás Troncoso sobre una placa técnica oscura",
+  cta: { href: "#portafolio", label: "Ver proyectos" },
+  secondaryCta: { href: "#contacto", label: "Hablemos" },
 };
 
 export const stats = [
@@ -100,45 +105,6 @@ export const skills = [
     name: "Python",
     description:
       "Validación de datos, scripts de consola y control de flujos.",
-  },
-];
-
-export const projects = [
-  {
-    technology: "react · vite · indexeddb",
-    title: "AlbumVault — catálogo musical personal",
-    description: "Registro y valoración de álbumes.",
-    href: "/albumvault/",
-  },
-  {
-    technology: "python",
-    title: "Menú de venta de entradas a prueba de errores",
-    description: "Venta de entradas con control de stock.",
-    href: "https://github.com/NATOcl/repositoriopruebaNicolasTroncosoFormaC",
-  },
-  {
-    technology: "java",
-    title: "SteamVerde — tienda ficticia a baja escala",
-    description: "Base de datos de una tienda de videojuegos.",
-    href: "https://github.com/NATOcl/steamverde-examen",
-  },
-  {
-    technology: "html · css",
-    title: "Tienda de mascotas en HTML puro",
-    description: "Catálogo de mascotas sin frameworks.",
-    href: "https://natocl.github.io",
-  },
-  {
-    technology: "kotlin · android studio",
-    title: "Shiva — app móvil de agricultura",
-    description: "Proyecto de curso para Android.",
-    href: "https://github.com/NATOcl/DSY1105-Shiva",
-  },
-  {
-    technology: "react · vite",
-    title: "PetCare — sitio web de veterinaria",
-    description: "Sitio de veterinaria con rutas.",
-    href: "https://github.com/NATOcl/NATOcl.github.io",
   },
 ];
 

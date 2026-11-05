@@ -1,0 +1,59 @@
+[
+  {
+    "id": "albumvault",
+    "title": "AlbumVault — catálogo musical personal",
+    "description": "SPA para buscar, registrar y valorar álbumes. Guarda la colección en IndexedDB y consulta metadatos de MusicBrainz, iTunes y Spotify.",
+    "technologies": ["React 18", "Vite", "IndexedDB", "Node.js"],
+    "image": "assets/projects/albumvault.svg",
+    "imageAlt": "Portada abstracta de AlbumVault con un disco y una grilla técnica",
+    "demo": "/albumvault/",
+    "repo": "https://github.com/NATOcl/NATO"
+  },
+  {
+    "id": "entradas",
+    "title": "Menú de venta de entradas",
+    "description": "Ejercicio de consola en Python con validación de datos, control de stock y menús a prueba de errores.",
+    "technologies": ["Python", "Lógica", "Validación"],
+    "image": "assets/projects/entradas.svg",
+    "imageAlt": "Portada de la venta de entradas con un ticket y líneas de código",
+    "repo": "https://github.com/NATOcl/repositoriopruebaNicolasTroncosoFormaC"
+  },
+  {
+    "id": "steamverde",
+    "title": "SteamVerde — tienda ficticia",
+    "description": "Modelo de base de datos y operaciones para una tienda de videojuegos a baja escala, construido como examen de curso.",
+    "technologies": ["Java", "SQL", "POO"],
+    "image": "assets/projects/steamverde.svg",
+    "imageAlt": "Portada de SteamVerde con un control y una tabla de datos",
+    "repo": "https://github.com/NATOcl/steamverde-examen"
+  },
+  {
+    "id": "mascotas",
+    "title": "Tienda de mascotas en HTML puro",
+    "description": "Catálogo responsive sin frameworks para practicar estructura semántica, formularios y estilos base.",
+    "technologies": ["HTML", "CSS", "Accesibilidad"],
+    "image": "assets/projects/mascotas.svg",
+    "imageAlt": "Portada de la tienda de mascotas con una huella y una ventana de navegador",
+    "demo": "https://natocl.github.io",
+    "repo": "https://github.com/NATOcl/NATOcl.github.io"
+  },
+  {
+    "id": "shiva",
+    "title": "Shiva — app móvil de agricultura",
+    "description": "Proyecto de curso para Android orientado al registro de cultivos y tareas de terreno.",
+    "technologies": ["Kotlin", "Android Studio", "XML"],
+    "image": "assets/projects/shiva.svg",
+    "imageAlt": "Portada de Shiva con una hoja y la silueta de un teléfono",
+    "repo": "https://github.com/NATOcl/DSY1105-Shiva"
+  },
+  {
+    "id": "petcare",
+    "title": "PetCare — sitio de veterinaria",
+    "description": "Sitio con rutas para presentar servicios, especialidades y datos de contacto de una veterinaria.",
+    "technologies": ["React", "Vite", "Router"],
+    "image": "assets/projects/petcare.svg",
+    "imageAlt": "Portada de PetCare con una cruz veterinaria y una huella",
+    "demo": "https://natocl.github.io",
+    "repo": "https://github.com/NATOcl/NATOcl.github.io"
+  }
+]

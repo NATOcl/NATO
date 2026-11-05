@@ -1,32 +1,36 @@
-import { projects } from "../data/content";
-import Reveal from "./Reveal";
+import useJsonData from "../hooks/useJsonData";
+import DataStatus from "./DataStatus";
+import ProjectCard from "./ProjectCard";
 import Section from "./Section";
 
 export default function Portfolio() {
-  return (
-    <Section id="portafolio" index="04" title="Portafolio">
-      <div className="project-list">
-        {projects.map((project, index) => (
-          <Reveal
-            as="article"
-            key={project.title}
-            className="project-plate"
-            delay={index * 80}
-          >
-            <a
-              href={project.href}
-              className="project-plate__link"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <p className="project-plate__tech">{project.technology}</p>
-              <h3 className="project-plate__title">{project.title}</h3>
-            </a>
+  const { data, loading, error, reload } = useJsonData("data/projects.json");
+  const projects = Array.isArray(data) ? data : data?.projects || [];
 
-            <p className="project-plate__desc">{project.description}</p>
-          </Reveal>
-        ))}
-      </div>
+  return (
+    <Section id="portafolio" index="04" title="Portafolio" wide>
+      <p className="section-note">
+        Proyectos de curso y ejercicios personales. Cada tarjeta enlaza a una
+        demo o al repositorio con el código.
+      </p>
+
+      <DataStatus
+        loading={loading}
+        error={error}
+        empty={!loading && !error && projects.length === 0}
+        onRetry={reload}
+        label="proyectos"
+      />
+
+      {!loading && !error && projects.length > 0 && (
+        <div className="row g-4 project-grid">
+          {projects.map((project, index) => (
+            <div className="col-12 col-md-6 col-xl-4" key={project.id || project.title}>
+              <ProjectCard project={project} delay={index * 70} />
+            </div>
+          ))}
+        </div>
+      )}
     </Section>
   );
 }

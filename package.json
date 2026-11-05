@@ -14,14 +14,27 @@
     "dev:api": "node server.js",
     "build": "vite build && npm --prefix AlbumVault run build -- --base=/albumvault/",
     "start": "node server.js",
-    "preview": "npm run build && node server.js"
+    "preview": "npm run build && node server.js",
+    "test": "karma start karma.conf.cjs --single-run",
+    "test:watch": "karma start karma.conf.cjs --auto-watch --no-single-run",
+    "test:coverage": "karma start karma.conf.cjs --single-run"
   },
   "dependencies": {
+    "bootstrap": "^5.3.8",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.13",
     "@vitejs/plugin-react": "^6.1.2",
+    "esbuild": "^0.28.2",
+    "istanbul-lib-instrument": "^6.0.3",
+    "jasmine-core": "^5.13.0",
+    "karma": "^6.4.4",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-coverage": "^2.2.1",
+    "karma-esbuild": "^2.3.0",
+    "karma-jasmine": "^5.1.0",
     "vite": "^8.3.5"
   }
 }

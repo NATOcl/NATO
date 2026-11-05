@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="title desc">
+  <title id="title">SteamVerde</title>
+  <desc id="desc">Control de videojuegos y una tabla de base de datos.</desc>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#1e2e3a" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="#0e1a24"/>
+  <rect width="800" height="450" fill="url(#grid)"/>
+  <path d="M0 0h44M0 0v44M800 450h-44M800 450v-44" stroke="#63a8d2" stroke-width="2"/>
+  <rect x="46" y="44" width="708" height="362" fill="none" stroke="#7fa8be" stroke-opacity=".28"/>
+
+  <g transform="translate(520 214)">
+    <path d="M-142-6c8-48 38-78 76-78h132c38 0 68 30 76 78l16 82c6 32-24 52-48 32l-44-38h-132l-44 38c-24 20-54 0-48-32Z" fill="#13222e" stroke="#7fa8be" stroke-width="2"/>
+    <rect x="-52" y="-30" width="104" height="54" rx="8" fill="#e9ede6"/>
+    <path d="M-24-3h48M0-27v48" stroke="#0e1a24" stroke-width="4"/>
+    <circle cx="86" cy="-8" r="10" fill="#63a8d2"/>
+    <circle cx="108" cy="14" r="10" fill="#e4572e"/>
+    <circle cx="-86" cy="-8" r="10" fill="#e4572e"/>
+    <circle cx="-108" cy="14" r="10" fill="#63a8d2"/>
+  </g>
+
+  <g transform="translate(76 206)">
+    <rect x="0" y="0" width="218" height="150" fill="#e9ede6"/>
+    <rect x="0" y="0" width="218" height="28" fill="#0e1a24"/>
+    <g fill="#7fa8be" font-family="'IBM Plex Mono', Consolas, monospace" font-size="10" letter-spacing="1.5">
+      <text x="12" y="19">ID</text><text x="62" y="19">JUEGO</text><text x="160" y="19">STOCK</text>
+    </g>
+    <g stroke="#7fa8be" stroke-opacity=".4">
+      <path d="M0 70h218M0 112h218M54 28v122M152 28v122"/>
+    </g>
+    <g fill="#0e1a24" font-family="'IBM Plex Mono', Consolas, monospace" font-size="12">
+      <text x="12" y="52">01</text><text x="64" y="52">Shiva</text><text x="162" y="52">12</text>
+      <text x="12" y="94">02</text><text x="64" y="94">PetCare</text><text x="162" y="94">08</text>
+      <text x="12" y="136">03</text><text x="64" y="136">AlbumVault</text><text x="162" y="136">21</text>
+    </g>
+  </g>
+
+  <g fill="#e9ede6" font-family="'Space Grotesk', 'Segoe UI', sans-serif">
+    <text x="76" y="116" font-size="42" font-weight="600" letter-spacing="-1.5">SteamVerde</text>
+    <text x="76" y="146" fill="#7fa8be" font-family="'IBM Plex Mono', Consolas, monospace" font-size="13" letter-spacing="3">TIENDA A BAJA ESCALA</text>
+  </g>
+  <g fill="#7fa8be" font-family="'IBM Plex Mono', Consolas, monospace" font-size="12" letter-spacing="1.6">
+    <text x="76" y="382">JAVA · SQL · POO</text>
+  </g>
+  <path d="M664 372h90M664 382h60M664 392h36" stroke="#63a8d2" stroke-width="2"/>
+</svg>

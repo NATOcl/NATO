@@ -59,9 +59,11 @@ export default function Courses() {
   };
 
   const closeCourse = () => setActiveCourse(null);
+  const pdfUrl =
+    typeof activeCourse?.pdf === "string" ? activeCourse.pdf : "";
 
   return (
-    <Section id="cursos" index="06" title="Cursos" divider={false}>
+    <Section id="cursos" index="07" title="Cursos" divider={false}>
       <div className="course-list">
         {courses.map((course) => (
           <Reveal
@@ -108,7 +110,7 @@ export default function Courses() {
               <div className="pdf-modal__actions">
                 <a
                   className="pdf-modal__external"
-                  href={activeCourse.pdf}
+                  href={pdfUrl || undefined}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -134,7 +136,7 @@ export default function Courses() {
                 </p>
               )}
               <iframe
-                src={`${activeCourse.pdf}#view=FitH`}
+                src={pdfUrl ? `${pdfUrl}#view=FitH` : "about:blank"}
                 title={`Previsualización del certificado ${activeCourse.name}`}
                 onLoad={() => setPdfLoading(false)}
               />

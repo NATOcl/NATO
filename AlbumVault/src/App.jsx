@@ -237,8 +237,9 @@ export default function App() {
   const importBackup = useCallback(async (file) => {
     if (!file) return;
 
-    // A hand-crafted file should not be able to freeze the tab while it parses.
-    // Covers in base64 make real backups big, so the cap is generous.
+    // Un archivo hecho a mano no debe congelar la pestaña mientras se parsea.
+    // Las portadas en base64 hacen que una copia real pese, así que el límite
+    // es generoso.
     if (file.size > 64 * 1024 * 1024) {
       say("La copia es demasiado grande", "El límite es de 64 MB.", "error");
       return;

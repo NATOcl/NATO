@@ -14,8 +14,9 @@ const PORT = Number(process.env.PORT || 3000);
 const MB_BASE = "https://musicbrainz.org/ws/2";
 const CAA_BASE = "https://coverartarchive.org";
 const ITUNES_BASE = "https://itunes.apple.com";
-// Hardcoding country=us hid albums that never shipped there. A storefront
-// that has no match falls back to the US one so results are never empty.
+// Fijar country=us escondía álbumes que nunca salieron allí. Si la tienda
+// configurada no tiene coincidencia, se usa la de EE. UU. para no dejar la
+// búsqueda vacía.
 const ITUNES_COUNTRY = (process.env.ITUNES_COUNTRY || "es").toLowerCase();
 const ITUNES_FALLBACK_COUNTRY = "us";
 const USER_AGENT = process.env.MUSICBRAINZ_USER_AGENT || "AlbumVault/1.0 (http://localhost:3000)";
@@ -40,14 +41,15 @@ let musicBrainzQueue = Promise.resolve();
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 /* ------------------------------------------------------------------ *
- * Rate limiting.
+ * Límite de peticiones.
  *
- * A generous fixed window: the point is to stop a script from using the
- * public proxy as a free load generator against MusicBrainz/iTunes, not
- * to police a person browsing the catalog. Keyed by the client address
- * forwarded by the platform proxy; behind a proxy the socket address is
- * the proxy itself, so the header is the only usable key. It is a speed
- * bump, not an authorization boundary: rotating the header evades it.
+ * Ventana fija y generosa: lo que se busca es evitar que un script use el
+ * proxy público como generador de carga gratis contra MusicBrainz/iTunes,
+ * no vigilar a una persona que navega el catálogo. Se cuenta por la
+ * dirección que reenvía el proxy de la plataforma; detrás de un proxy la
+ * dirección del socket es el propio proxy, así que la cabecera es la única
+ * clave útil. Es un freno, no una barrera de autorización: rotar la
+ * cabecera lo evade.
  * ------------------------------------------------------------------ */
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 300;
@@ -81,13 +83,12 @@ function rateLimitAllows(req) {
 }
 
 /* ------------------------------------------------------------------ *
- * In-memory cache.
+ * Caché en memoria.
  *
- * Providers charge latency twice for the same album: once when the
- * search lists it and once when its cover is painted. The cache only
- * lives as long as the process, so it never becomes the source of
- * truth for anything -- restart it and every request simply goes
- * upstream again.
+ * Los proveedores cobran dos veces la latencia del mismo álbum: una
+ * cuando la búsqueda lo lista y otra cuando se pinta su portada. La caché
+ * vive lo que vive el proceso, así que nunca es la fuente de verdad de
+ * nada: al reiniciar, cada petición vuelve a salir fuera.
  * ------------------------------------------------------------------ */
 function createCache({ maxEntries, maxBytes, ttlMs }) {
   const map = new Map();
@@ -100,7 +101,7 @@ function createCache({ maxEntries, maxBytes, ttlMs }) {
     map.delete(key);
   };
 
-  // Re-insert so the Map iterates oldest-use-first.
+  // Se reinserta para que el Map recorra primero lo menos usado.
   const touch = (key, entry) => {
     map.delete(key);
     map.set(key, entry);
@@ -130,12 +131,12 @@ function createCache({ maxEntries, maxBytes, ttlMs }) {
   };
 }
 
-// Covers are big and change rarely; provider JSON is small and changes
-// more often, so the two get separate budgets and lifetimes.
+// Las portadas pesan y cambian poco; el JSON de los proveedores es pequeño
+// y cambia más, así que cada uno tiene su propio presupuesto y duración.
 const coverCache = createCache({ maxEntries: 600, maxBytes: 96 * 1024 * 1024, ttlMs: 7 * 24 * 60 * 60 * 1000 });
 const jsonCache = createCache({ maxEntries: 500, maxBytes: 16 * 1024 * 1024, ttlMs: 10 * 60 * 1000 });
 
-// Two requests for the same missing key must not both hit the upstream.
+// Dos peticiones de la misma clave ausente no deben golpear dos veces al proveedor.
 const inFlight = new Map();
 
 async function cached(cache, cacheKey, loader) {
@@ -162,9 +163,9 @@ function queueMusicBrainzRequest(task) {
 }
 
 async function musicBrainzFetch(url) {
-  // MusicBrainz is the slowest provider by design (one request every
-  // 1.1s), so a repeat search is worth serving from memory rather than
-  // making the user sit through the queue a second time.
+  // MusicBrainz es el proveedor más lento a propósito (una petición cada
+  // 1,1 s), así que repetir una búsqueda desde memoria ahorra hacer esperar
+  // otra vez al usuario en la cola.
   return cached(jsonCache, `mb:${url}`, async () => {
     // Un 503 de MusicBrainz casi siempre es su límite de tasa puntual, no una
     // caída: se reintenta una vez en vez de devolver la lista vacía (que en la
@@ -330,9 +331,9 @@ function parseArtistAlbumQuery(q) {
 function normalizeItunesAlbum(item, matchType = "album") {
   const releaseDate = String(item?.releaseDate || "").slice(0, 10);
   const collectionType = item?.collectionType || (item?.collectionId ? "Album" : "");
-  // Result rows paint the art at 46 CSS px, so 200 is the smallest size
-  // that stays sharp on a 2x display. Asking for the 600px variant meant
-  // downloading ~100 KB to fill a 46 px box.
+  // Las filas de resultado pintan la portada a 46px CSS, así que 200 es el
+  // tamaño más pequeño que se mantiene nítido en pantallas 2x. Pedir la
+  // variante de 600px descargaba ~100 KB para llenar una caja de 46px.
   const coverUrl = imageProxyUrl(
     String(item?.artworkUrl100 || "").replace(/100x100bb\./i, "200x200bb.")
   );
@@ -482,8 +483,8 @@ async function musicBrainzArtistDiscography(query) {
     date: group["first-release-date"] || "",
     primaryType: group["primary-type"] || "",
     secondaryTypes: group["secondary-types"] || [],
-    // A release group with a disambiguation is usually the "other one with
-    // the same name": a tribute, a bootleg or a regional variant.
+    // Un grupo de lanzamientos con desambiguación suele ser "el otro con el
+    // mismo nombre": un tributo, un bootleg o una variante regional.
     disambiguation: group.disambiguation || "",
     coverUrl: `/api/cover-art-group/${encodeURIComponent(group.id)}/front-250`,
     source: "MusicBrainz",
@@ -491,25 +492,25 @@ async function musicBrainzArtistDiscography(query) {
   })).filter(x => x.title);
 }
 
-// A misconfigured upstream can return megabytes; refuse to buffer them.
+// Un proveedor mal configurado puede devolver megabytes; no se guardan en memoria.
 const MAX_COVER_BYTES = 12 * 1024 * 1024;
-// Lucene queries are short by nature; the cap keeps a single request from
-// turning into a megabyte of upstream URL and work.
+// Las consultas Lucene son cortas por naturaleza; el tope evita que una
+// petición se convierta en un megabyte de URL y trabajo.
 const MAX_QUERY_LENGTH = 160;
 const MAX_PROXY_URL_LENGTH = 4096;
 
 /* ------------------------------------------------------------------ *
- * Cover loading
+ * Carga de portadas
  *
- * Every cover is served same-origin through /api/img so the browser
- * never talks to the providers directly. That keeps the CSP at
- * img-src 'self' and means the user's IP is not handed to a third
- * party on every search.
+ * Toda portada se sirve desde el mismo origen por /api/img, así que el
+ * navegador nunca habla directo con los proveedores. Eso mantiene la CSP
+ * en img-src 'self' y evita entregar la IP del usuario a un tercero en
+ * cada búsqueda.
  * ------------------------------------------------------------------ */
 
-// A generic image proxy is an SSRF primitive unless the target is
-// pinned: only these hosts are ever fetched, matched on the exact host
-// or one of its subdomains.
+// Un proxy de imágenes genérico es un SSRF en potencia si no se fija el
+// destino: solo se piden estos hosts, por coincidencia exacta o por uno de
+// sus subdominios.
 const IMAGE_HOST_ALLOWLIST = new Set([
   "mzstatic.com",
   "coverartarchive.org",
@@ -538,9 +539,9 @@ function imageProxyUrl(remoteUrl) {
   }
 }
 
-// Inverse of imageProxyUrl. Lets warmCovers reuse the value already on
-// the release without every normalizer having to carry the raw upstream
-// URL around (and without shipping it to the browser).
+// Lo inverso de imageProxyUrl. Permite que warmCovers reutilice el valor
+// que ya trae el lanzamiento sin que cada normalizador cargue con la URL
+// original (ni la mande al navegador).
 function remoteFromProxyUrl(proxyUrl) {
   if (typeof proxyUrl !== "string" || !proxyUrl.startsWith("/api/img?u=")) return "";
   try {
@@ -590,9 +591,9 @@ function isAllowedImageUrl(value) {
   return parsed;
 }
 
-// The bytes decide the type, not the upstream header: an error page served
-// with image/jpeg must never reach the browser as an image on this origin.
-// SVG is deliberately absent — it can carry script.
+// El tipo lo deciden los bytes, no la cabecera del proveedor: una página de
+// error servida como image/jpeg no puede llegar al navegador como imagen de
+// este origen. SVG queda fuera a propósito: puede llevar script.
 function sniffImageType(buffer) {
   if (!buffer || buffer.length < 12) return "";
   if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) return "image/jpeg";
@@ -612,9 +613,9 @@ function sniffImageType(buffer) {
   return "";
 }
 
-// Redirects are followed by hand because the allow-list has to be checked
-// again on every hop: `redirect: "follow"` would let an allowed host hand
-// the request over to any internal address.
+// Las redirecciones se siguen a mano porque hay que revisar la lista de
+// hosts permitidos en cada salto: con redirect: "follow", un host permitido
+// podría entregar la petición a cualquier dirección interna.
 async function loadImage(remoteUrl, cap = MAX_COVER_BYTES) {
   let current = isAllowedImageUrl(remoteUrl);
   if (!current) {
@@ -665,9 +666,9 @@ async function loadImage(remoteUrl, cap = MAX_COVER_BYTES) {
   throw error;
 }
 
-// Returns { buffer, contentType } or { notFound: true }. A 404 is
-// remembered too: releases without art are common, and re-asking the
-// provider for every one of them is pure waste.
+// Devuelve { buffer, contentType } o { notFound: true }. También se
+// recuerda el 404: los lanzamientos sin arte son comunes y preguntar al
+// proveedor por cada uno es puro desperdicio.
 async function resolveCover(cacheKey, loader) {
   return cached(coverCache, cacheKey, async () => {
     try {
@@ -683,10 +684,10 @@ async function resolveCover(cacheKey, loader) {
   });
 }
 
-// Warms the covers of a normalized search result list, so the first paint
-// does not wait on 20 sequential upstream round trips. Runs after the
-// response is already sent and swallows failures: a failed warm-up only
-// costs the same round trip the browser was going to make anyway.
+// Precalienta las portadas de una lista de resultados ya normalizada para
+// que el primer pintado no espere 20 viajes secuenciales. Corre después de
+// enviar la respuesta y se traga los errores: si falla, solo cuesta el
+// mismo viaje que el navegador iba a hacer igual.
 function warmReleaseCovers(items) {
   const inThisRound = new Set();
 
@@ -694,8 +695,8 @@ function warmReleaseCovers(items) {
     const proxyUrl = String(item?.coverUrl || "");
     if (!proxyUrl || inThisRound.has(proxyUrl)) continue;
 
-    // MusicBrainz rows already point at our own /api/cover-art-* routes,
-    // so they are warmed under the same keys those routes will look up.
+    // Las filas de MusicBrainz ya apuntan a nuestras rutas /api/cover-art-*,
+    // así que se precalientan con las mismas claves que buscarán esas rutas.
     const groupMatch = proxyUrl.match(/^\/api\/cover-art-group\/([0-9a-fA-F-]{36})\/front-(250|500|1200)$/);
     if (groupMatch) {
       const [, id, size] = groupMatch;
@@ -735,9 +736,10 @@ export function sendJson(res, status, payload) {
     "Referrer-Policy": "no-referrer"
   });
   res.end(JSON.stringify(payload));
-  // Callers do `return sendJson(...)` inside handleApi, and the router reads a
-  // truthy return as "this request was answered". Returning undefined here sent
-  // a second 404 over a response that was already written.
+  // Quien llama hace return sendJson(...) dentro de handleApi, y el router
+  // interpreta un retorno verdadero como "esta petición ya se respondió". Si
+  // aquí se devolviera undefined, se escribiría un segundo 404 sobre una
+  // respuesta ya enviada.
   return true;
 }
 
@@ -812,10 +814,10 @@ export async function handleApi(req, res, url) {
     if (q.length > MAX_QUERY_LENGTH) return sendJson(res, 400, { error: "Search query is too long." });
 
     try {
-      // Search the release index by BOTH artist and release title. This means
-      // the same input box accepts an artist name, an album title, or both.
-      // MusicBrainz supports fielded Lucene queries such as artistname: and release:.
-      // We keep the query as a phrase to avoid splitting multi-word K-pop names.
+      // Busca en el índice de lanzamientos por artista Y por título. Así la misma
+      // caja acepta un artista, un álbum o ambos. MusicBrainz admite consultas
+      // Lucene por campo (artistname:, release:). La consulta va como frase para
+      // no partir nombres de K-pop con varias palabras.
       let artistPart = "";
       let albumPart = "";
       const parts = q.split(/\s+[—–-]\s+/);
@@ -835,10 +837,10 @@ export async function handleApi(req, res, url) {
       const data = await musicBrainzFetch(mbUrl.toString());
       sendJson(res, 200, {
         releases: (data.releases || []).map(release => {
-          // The release-group carries the canonical-album signals the client
-          // uses to rank: secondary types (live, remix, compilation) and
-          // disambiguation. Without them a bootleg with the same title ranks
-          // exactly as the studio album.
+          // El release-group trae las señales que el cliente usa para ordenar los
+          // álbumes canónicos: tipos secundarios (live, remix, recopilatorio) y
+          // desambiguación. Sin ellas, un bootleg con el mismo título queda igual
+          // que el álbum de estudio.
           const group = release["release-group"] || {};
           return {
             id: release.id,
@@ -911,7 +913,7 @@ export async function handleApi(req, res, url) {
         }
       }
 
-      // Album-title search works even when the query was not an artist.
+      // La búsqueda por título de álbum funciona aunque la consulta no sea un artista.
       if (!artist || album) {
         const albumResults = await itunesSearch({
           term: artist ? `${artist} ${album}` : (album || q),
@@ -1165,9 +1167,9 @@ export async function handleApi(req, res, url) {
     return true;
   }
 
-  // Same-origin image proxy. Search results point here instead of at the
-  // providers directly, so the CSP can keep img-src 'self' and every byte
-  // goes through the cache.
+  // Proxy de imágenes del mismo origen. Los resultados apuntan aquí y no a
+  // los proveedores, así la CSP mantiene img-src 'self' y cada byte pasa por
+  // la caché.
   if (req.method === "GET" && url.pathname === "/api/img") {
     const rawUrl = url.searchParams.get("u") || "";
     if (rawUrl.length > MAX_PROXY_URL_LENGTH) {
@@ -1210,14 +1212,15 @@ const mime = {
   ".woff2": "font/woff2"
 };
 
-// Only the built SPA is reachable. A broad extension regex is not enough:
-// server.js, package.json and the stale index.before-*.html backups all match
-// one, so the list is explicit.
+// Solo se puede llegar a la SPA compilada. Una regex amplia de extensiones
+// no basta: server.js, package.json y los viejos index.before-*.html también
+// la cumplen, así que la lista es explícita.
 //
-// With Vite the document is dist/index.html and the code it loads lives in
-// dist/assets/ under hashed names. So the allow-list has two shapes: the document
-// itself, and the asset directory by extension. The name of an asset is chosen
-// by the build, not by whoever asks, so this stays an allow-list and not a hole.
+// Con Vite el documento es dist/index.html y el código que carga vive en
+// dist/assets/ con nombres hasheados. Por eso la lista tiene dos formas: el
+// documento y el directorio de assets por extensión. El nombre del asset lo
+// elige el build, no quien pide, así que sigue siendo una lista blanca y no
+// un agujero.
 const DIST = path.join(ROOT, "dist");
 const PUBLIC_FILES = new Set(["/", "/index.html"]);
 const ASSET_EXTENSIONS = new Set([".js", ".css", ".svg", ".png", ".jpg", ".jpeg", ".webp", ".avif", ".ico", ".woff2", ".map"]);
@@ -1233,8 +1236,8 @@ function safePath(requestPath) {
 
   if (PUBLIC_FILES.has(p)) {
     const document_ = path.join(DIST, "index.html");
-    // Before `npm run build` there is nothing to serve: say so instead of a 404
-    // that looks like a broken app.
+    // Antes de npm run build no hay nada que servir: mejor decirlo que dar un
+    // 404 que parece una app rota.
     if (!fs.existsSync(document_)) return "MISSING_BUILD";
     return document_;
   }

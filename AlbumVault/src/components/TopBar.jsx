@@ -19,9 +19,9 @@ const THEME_OPTIONS = [
   ["system", "Según el sistema"]
 ];
 
-/* The way back to the CV. In production AlbumVault lives under /albumvault/, so
-   "/" is the portfolio; in dev it runs on its own port with the same base, where
-   "/" would still be AlbumVault and the CV is on :5173. */
+/* El camino de vuelta al CV. En producción AlbumVault vive bajo /albumvault/,
+   así que "/" es el portafolio; en desarrollo corre en su propio puerto con la
+   misma base, donde "/" seguiría siendo AlbumVault y el CV está en :5173. */
 const CV_URL = import.meta.env.DEV ? "http://localhost:5173/" : "/";
 
 function ThemeMenu() {

@@ -3,11 +3,11 @@
    fichero salió del <style> del monolito y su orden importa — el bloque de
    paridad con preflight va arriba a propósito, y el puente x-* al final. */
 
-    /* ---------- theme ----------
-       One set of names, two palettes. Every rule below is written against these
-       variables, so a colour is defined exactly once. Light lives on :root so
-       the page still renders if the head script never runs; dark is applied on
-       top of it. */
+    /* ---------- tema ----------
+       Un solo juego de nombres y dos paletas. Todas las reglas de abajo usan
+       estas variables, así que cada color se define una sola vez. El claro vive
+       en :root para que la página se vea aunque el script del <head> no corra;
+       el oscuro se aplica encima. */
     :root {
       color-scheme: light;
 
@@ -19,24 +19,24 @@
       --line-soft: #e8e2d6;
       --text: #23211d;
       --soft: #4d4a44;
-      /* Three secondary steps, measured against --page (244,241,234) with a
-         relative-luminance function, not by eye: soft 7.8:1, muted 5.4:1, faint
-         4.6:1. faint is the 11px hint that carries the app's instructions, so it
-         is the step that must not get dimmer — it is what fails first. */
+      /* Tres pasos secundarios medidos contra --page (244,241,234) con una
+         función de luminancia relativa, no a ojo: soft 7.8:1, muted 5.4:1 y
+         faint 4.6:1. faint es el texto de 11px que explica la app, así que es
+         el paso que no puede bajar más: es el primero que falla. */
       --muted: #666257;
       --faint: #746d5f;
-      /* Bone means "value": the score, the active filter, the success. Paper
-         cannot carry the pale bone of the dark palette, so light mode spends the
-         same name as a deep ochre — same job, inverted lightness. */
+      /* Bone significa "valor": la nota, el filtro activo y el éxito. El papel
+         no aguanta el bone pálido del modo oscuro, así que en claro el mismo
+         nombre es un ocre profundo: mismo papel, luminosidad invertida. */
       --bone: #856515;
-      /* Stars carry their own pair, and it is the dark pair with the lightness
-         inverted: the score under the control is ochre, but a half-star painted
-         ochre next to a grey one reads as two colours fighting, not as one star
-         half lit. Dark does cream + mid grey; paper cannot carry cream, so the
-         lit half is the ink and the unlit half a warm grey. --star-off stays
-         above 3:1 against the panel (3.4:1) and against the page (3.1:1): an
-         album you have not scored yet still has to look like something you can
-         click. */
+      /* Las estrellas tienen su propio par de colores, el del modo oscuro con
+         la luminosidad invertida. La nota va en ocre, pero media estrella ocre
+         junto a una gris parece dos colores peleando, no una estrella a medio
+         encender. En oscuro son crema y gris medio; el papel no aguanta la
+         crema, así que la mitad encendida es la tinta y la apagada un gris
+         cálido. --star-off se queda por encima de 3:1 contra el panel (3.4:1)
+         y contra la página (3.1:1): un álbum sin valorar todavía tiene que
+         parecer que se puede pulsar. */
       --star-on: var(--text);
       --star-off: #8f8a7f;
       --on-bone: #fffdf8;
@@ -48,8 +48,8 @@
       --field: #ffffff;
       --surface: #ffffff;
       --inset: #efeae0;
-      /* Hovers are a wash of the opposite end of the page, not a fixed tint, so
-         they invert with it. */
+      /* El hover es un velo del extremo opuesto de la página, no un tinte fijo,
+         así que se invierte con ella. */
       --hover: #1c19130d;
       --press: #1c191317;
       --line-hi: #c6bfb1;
@@ -68,18 +68,19 @@
       --scrim: rgba(40, 36, 30, .42);
       --shadow: rgba(60, 50, 35, .18);
 
-      /* Width is the hierarchy signal, not size: a condensed cut reads as
-         "big", an extended one as "small label". One family, four cuts. */
+      /* La jerarquía la marca el ancho, no el tamaño: una fuente condensada se
+         lee como "grande" y una extendida como "etiqueta pequeña". Una familia,
+         cuatro cortes. */
       --wd-hero: 78%;
       --wd-stat: 82%;
       --wd-head: 88%;
       --wd-label: 90%;
 
-      /* The whole stacking order, in four steps. These used to be 60 / 70 / 100
-         / 150 written straight into the rules and, for the modal and the toast,
-         into `z-[100]` / `z-[150]` class attributes in the markup — which meant
-         a literal z-index had to be found in three different files to change one
-         layer. Only the relationships matter: bar < menu < modal < toast. */
+      /* Todo el orden de capas, en cuatro pasos. Antes eran 60 / 70 / 100 / 150
+         escritos directamente en las reglas y, para el modal y el toast, en
+         clases z-[100] / z-[150] del marcado: cambiar una capa obligaba a buscar
+         un número en tres archivos. Solo importa el orden:
+         barra < menú < modal < toast. */
       --z-bar: 60;
       --z-menu: 70;
       --z-modal: 100;
@@ -97,9 +98,9 @@
       --line-soft: #232323;
       --text: #e9e6e6;
       --soft: #b6b1b1;
-      /* The same three steps against --page (19,19,19): soft 8.8:1, muted 6.2:1,
-         faint 4.6:1. faint used to be #6a6666 at 3.5:1, which quietly failed AA
-         on the 11px hints that carry the app's instructions. */
+      /* Los mismos tres pasos contra --page (19,19,19): soft 8.8:1, muted
+         6.2:1 y faint 4.6:1. Antes faint era #6a6666 con 3.5:1, que fallaba AA
+         sin avisar en las ayudas de 11px que explican la app. */
       --muted: #979494;
       --faint: #807d7d;
       --bone: #f0e9dc;
@@ -130,34 +131,34 @@
       --pencil-wash: #1a1211;
       --sep: #4a4a4a;
       --scrim: rgba(8, 8, 8, .8);
-      /* Warm-tinted, like the light palette's. Pure black over a near-black
-         page is not "neutral", it is just a hole; rgba(8, 6, 4) keeps the
-         shadow inside the same warm grey family the page is built from. */
+      /* Con tinte cálido, como en la paleta clara. El negro puro sobre una
+         página casi negra no es "neutral", es un agujero; rgba(8, 6, 4) mete la
+         sombra en la misma familia de grises cálidos de la página. */
       --shadow: rgba(8, 6, 4, .72);
     }
 
     *, *::before, *::after { box-sizing: border-box; }
     html, body { min-height: 100%; }
-    /* On <html> as well as <body>: this is what the overscroll area shows, and a
-       rubber band that turns white under a dark page reads as a bug. */
+    /* También en <html>, no solo en <body>: es lo que se ve al pasarse del
+       scroll, y una banda elástica blanca bajo una página oscura parece un bug. */
     html { background: var(--page); scroll-behavior: smooth; }
 
     body {
       margin: 0;
       color: var(--text);
       background:
-        /* Paper grain, painted as the first layer of the page's own background so
-           it sits under the covers, the text and the panels by construction
-           rather than by stacking order. Flat vector fills are what make a screen
-           look synthetic; a few percent of fractal noise is the difference between
-           "rendered" and "printed". It is listed before the glow on purpose: on
-           top of it, or the glow washes the grain out in the middle of the page.
+        /* Grano de papel, pintado como primera capa del fondo de la página para
+           que quede debajo de las portadas, el texto y los paneles por
+           construcción, no por orden de capas. Los rellenos vectoriales planos
+           hacen que una pantalla parezca sintética; un poco de ruido fractal es
+           la diferencia entre "renderizado" e "impreso". Va antes del brillo a
+           propósito: si va encima, el brillo borra el grano en el centro.
 
-           An inline SVG data URI rather than a bitmap: a few hundred bytes, sharp
-           at any DPI, no request. The faintness is baked into the <rect> because
-           a background-image layer cannot carry its own opacity. `img-src` already
-           allows `data:`, and background-image is governed by img-src, so the
-           existing CSP covers it without being relaxed. */
+           Es un SVG en línea como data URI, no un bitmap: pesa unos cientos de
+           bytes, se ve nítido en cualquier DPI y no genera una petición. La
+           opacidad baja va dentro del <rect> porque una capa de background-image
+           no puede llevar la suya. img-src ya permite data:, y el fondo se rige
+           por img-src, así que la CSP actual lo cubre sin relajarla. */
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.05'/%3E%3C/svg%3E") repeat,
         radial-gradient(120% 70% at 50% -12%, var(--glow) 0%, transparent 62%),
         var(--page);
@@ -168,34 +169,34 @@
       text-rendering: optimizeLegibility;
     }
 
-    /* The sticky bar covers whatever you jumped to, so an in-page link (the skip
-       link below) has to land clear of it. */
+    /* La barra fija tapa aquello a lo que saltas, así que un enlace interno (el
+       de saltar al contenido) tiene que caer por debajo. */
     main { scroll-margin-top: 88px; }
-    /* tabindex="-1" makes <main> a valid skip-link target, and a focus ring
-       around the entire page is noise, not information: the ring that matters is
-       the one on the link you just pressed. */
+    /* tabindex="-1" convierte <main> en destino válido del enlace de salto, y
+       un anillo de foco alrededor de toda la página es ruido, no información:
+       el anillo que importa es el del enlace que acabas de pulsar. */
     main:focus { outline: none; }
 
     h1, h2, h3, p, figure { margin: 0; }
 
-    /* ---------- preflight parity ----------
-       Tailwind shipped a preflight; Bootstrap ships Reboot. They disagree on
-       the element defaults, and every disagreement is a silent layout change:
-       Reboot gives h1–h6 `font-weight: 500; line-height: 1.2; margin-bottom:
-       .5rem` where preflight made them inherit and set `margin: 0`, and it
-       does not set `border-style: solid` on `*`. This block restores what
-       preflight did, so the ~145 rules below keep the box model they were
-       written against.
+    /* ---------- paridad con preflight ----------
+       Tailwind traía un preflight y Bootstrap trae Reboot. No coinciden en los
+       estilos por defecto de los elementos, y cada diferencia cambia el layout
+       sin avisar: Reboot pone en h1–h6 font-weight: 500, line-height: 1.2 y
+       margin-bottom: .5rem, donde preflight los hacía heredar y ponía
+       margin: 0, y no aplica border-style: solid a *. Este bloque devuelve lo
+       que hacía preflight, para que las ~145 reglas de abajo conserven el
+       modelo de caja con el que se escribieron.
 
-       It sits HERE, above every component, and that position is load-bearing.
-       A reset placed last wins by source order against any rule of equal
-       specificity, and one selector in it is not an element selector:
-       `[type="button"]` is (0,1,0) — exactly as specific as `.av-btn` or
-       `.cover-drop`. With the block at the end of the sheet, every button
-       carrying an explicit `type=` lost its border and its background and the
-       cover drop lost its dashed frame, while the same `.av-btn` in the top
-       bar (no `type` attribute, so only `button` matched at (0,0,1)) kept
-       them. Reset first, components after: that is the whole trick. */
+       Va AQUÍ, antes de todos los componentes, y esa posición importa. Un
+       reset al final gana por orden de fuente a cualquier regla de la misma
+       especificidad, y uno de sus selectores no es de elemento:
+       [type="button"] es (0,1,0), igual que .av-btn o .cover-drop. Con el
+       bloque al final de la hoja, todo botón con type= explícito perdía borde
+       y fondo, y el recuadro de portada perdía su marco discontinuo, mientras
+       que el mismo .av-btn de la barra (sin type, solo button a (0,0,1)) los
+       conservaba. Primero el reset, después los componentes: esa es toda la
+       trampa. */
     *, *::before, *::after { border-width: 0; border-style: solid; border-color: var(--line); }
     h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; margin: 0; }
     p, figure, blockquote, dl, dd, hr, pre { margin: 0; }
@@ -217,23 +218,23 @@
       outline-offset: 2px;
     }
 
-    /* The four layers, as classes, so nothing has to write `z-[100]` into a class
-       attribute. The numbers live in :root and only the order is meaningful. */
+    /* Las cuatro capas como clases, para no escribir z-[100] en un atributo
+       class. Los números viven en :root y solo importa el orden. */
     .layer-bar { z-index: var(--z-bar); }
     .layer-menu { z-index: var(--z-menu); }
     .layer-modal { z-index: var(--z-modal); }
     .layer-toast { z-index: var(--z-toast); }
 
-    /* ---------- press feedback ----------
-       A control that changes colour on hover and nothing at all when you push it
-       does not feel pressed, it feels like a picture of a button. One dip of one
-       pixel is enough; more than that and the whole page starts bouncing.
+    /* ---------- respuesta al pulsar ----------
+       Un control que cambia de color al pasar por encima y no hace nada al
+       pulsarlo no se siente pulsado: parece una foto de un botón. Baja un
+       píxel y basta; con más, toda la página empieza a botar.
 
-       Deliberately NOT applied to .star-picker, .filter-scale and .track-scale.
-       Those three are measured with getBoundingClientRect() while the pointer is
-       down — ratingFromPointer() divides the picker's own rect into five — so a
-       transform on them, or on any child, moves the star out from under the
-       cursor exactly at the moment a half-step is being chosen. */
+       A propósito NO se aplica a .star-picker, .filter-scale ni .track-scale.
+       A esos tres se les mide con getBoundingClientRect() mientras el puntero
+       está abajo (ratingFromPointer() divide el rect del propio selector en
+       cinco), así que un transform en ellos o en un hijo mueve la estrella de
+       debajo del cursor justo cuando se elige el medio paso. */
     .av-btn:active,
     .toggle:active,
     .bar-link:active,
@@ -249,16 +250,17 @@
     .switch-row:active {
       transform: translateY(1px);
     }
-    /* The sleeve is the one surface big enough to be worth a scale rather than a
-       dip: it lifts a hair off the page, the way a record comes off a shelf. */
+    /* La portada es la única superficie lo bastante grande para un scale en
+       vez de una bajada: se levanta un pelo, como un disco que sale de la
+       estantería. */
     .sleeve:active { transform: scale(.988); }
 
-    /* Nothing in the app moved instantly on purpose, but a great many controls
-       had a hover rule and no transition, which is visually the same thing. One
-       shared list and one duration for all of them — and nothing below may
-       declare a `transition` of its own, or it silently wins over this and the
-       control goes back to snapping. `.sleeve img` is the exception: it is a
-       different element, fading the artwork, not the frame being pressed. */
+    /* Nada en la app se movía al instante a propósito, pero muchos controles
+       tenían hover y ninguna transición, que a la vista es lo mismo. Una lista
+       compartida y una duración para todos; nada de abajo puede declarar su
+       propia transition, porque ganaría en silencio y el control volvería a
+       saltar. .sleeve img es la excepción: es otro elemento, el que desvanece
+       la portada, no el marco que se pulsa. */
     .av-btn, .toggle, .bar-link, .chip, .pager button, .av-dropdown button, .track-tools button,
     .album-foot button, .metadata-result, .switch-row, .sleeve, .icon-btn,
     .filter-panel .filter-chip, .filter-panel .filter-reset {
@@ -267,11 +269,11 @@
                   transform .1s ease;
     }
 
-    /* The square icon button: clearing the search, closing the modal. Two of
-       them, both bare text glyphs over nothing — so they get their hit area and
-       their press from one class instead of two sets of Tailwind strings that
-       would drift apart. 30px is the smallest box that is still comfortable to
-       press on a phone. */
+    /* El botón cuadrado de icono: limpiar la búsqueda y cerrar el modal. Son
+       dos, los dos un glifo de texto sin fondo, así que comparten una clase que
+       les da área de pulsación en vez de dos tandas de clases de Tailwind que
+       acabarían distintas. 30px es la caja más pequeña que sigue siendo cómoda
+       en un móvil. */
     .icon-btn {
       display: grid;
       place-items: center;
@@ -283,16 +285,16 @@
       line-height: 1;
     }
     .icon-btn:hover { color: var(--text); background: var(--hover); }
-    /* `.icon-btn` sets display:grid, which beats the `hidden` attribute's UA rule,
-       so the search-clear button would sit there permanently visible and
-       clickable with an empty query. Same trap as `.av-dropdown button`. */
+    /* .icon-btn pone display:grid, que gana a la regla hidden del navegador,
+       así que el botón de limpiar la búsqueda se quedaría siempre visible y
+       pulsable con la consulta vacía. La misma trampa que .av-dropdown button. */
     .icon-btn[hidden] { display: none; }
 
-    /* ---------- skip link ----------
-       The top bar holds six controls before <main> begins, so a keyboard user
-       crossing the page with Tab pays for all of them on every view. This is
-       off-screen until it takes focus — not merely transparent, because a
-       transparent control is still focusable and still announced. */
+    /* ---------- enlace de salto ----------
+       La barra superior tiene seis controles antes de <main>, así que quien
+       navega con Tab paga por todos en cada vista. Este enlace está fuera de
+       pantalla hasta que recibe el foco, no solo transparente: un control
+       transparente sigue siendo enfocable y sigue anunciándose. */
     .skip-link {
       position: absolute;
       top: 0;
@@ -320,11 +322,11 @@
     }
     .wordmark:hover { color: var(--text-bright); }
 
-    /* ---------- sticky top bar ----------
-       One row, and a hierarchy the eye can parse in one pass: wordmark, the
-       fast path (search), then the global actions. Filters collapse into a
-       single panel so nothing is a peer of nothing, and the theme is the only
-       control whose glyph carries its state. */
+    /* ---------- barra superior fija ----------
+       Una fila con una jerarquía que se entiende de un vistazo: la marca, el
+       camino rápido (buscar) y las acciones globales. Los filtros se pliegan
+       en un solo panel para que nada compita con nada, y el tema es el único
+       control cuyo glifo lleva su estado. */
     .topbar {
       position: sticky;
       top: 0;
@@ -389,9 +391,9 @@
     .toggle-value { color: var(--bone); font-weight: 600; }
     .caret { color: var(--faint); font-size: 9px; }
 
-    /* The exit to the portfolio. Same silhouette as .toggle because it shares
-       the row, but it is a link: it navigates, it does not open anything. The
-       word shrinks to "CV" on a phone, where the whole bar competes for width. */
+    /* La salida al portafolio. Tiene la misma silueta que .toggle porque
+       comparte la fila, pero es un enlace: navega, no abre nada. En un móvil la
+       palabra se queda en "CV", donde toda la barra se pelea por el ancho. */
     .bar-link {
       display: inline-flex;
       align-items: center;
@@ -423,15 +425,15 @@
       row-gap: 4px;
     }
 
-    /* The theme switch is the only toggle whose glyph carries its state: a sun, a
-       moon, or half of each for "follow the system". The word next to it is
-       dropped on a phone, so the glyph is all that is left there. */
+    /* El cambio de tema es el único toggle cuyo glifo lleva el estado: un sol,
+       una luna o mitad de cada uno para "seguir el sistema". En un móvil se
+       quita la palabra, así que solo queda el glifo. */
     .theme-glyph { flex: none; font-size: 14px; line-height: 1; color: var(--soft); }
     .toggle:hover .theme-glyph,
     .toggle[aria-expanded="true"] .theme-glyph { color: var(--text); }
 
-    /* A filter that is actually narrowing the list says so, in bone, and the
-       panel trigger counts them. Nothing else in the app is that colour. */
+    /* Un filtro que de verdad estrecha la lista lo dice en bone, y el botón del
+       panel los cuenta. Nada más en la app usa ese color. */
     .filter-count {
       min-width: 17px;
       height: 17px;
@@ -453,8 +455,8 @@
       top: calc(100% + 6px);
       left: 0;
       min-width: 232px;
-      /* Anchored to the toggle, which on a phone can sit near the left edge —
-         without this the panel opens off-screen. */
+      /* Va anclado al toggle, que en un móvil puede quedar cerca del borde
+         izquierdo; sin esto el panel se abre fuera de pantalla. */
       max-width: calc(100vw - 20px);
       z-index: var(--z-menu);
       padding: 4px;
@@ -481,23 +483,24 @@
     .av-dropdown button[aria-checked="true"] { color: var(--bone); }
     .av-dropdown button[aria-checked="true"]::after { content: "\2713"; color: var(--faint); }
 
-    /* ---------- the filter panel ----------
-       Four rows, one question each, and a foot. The previous version stacked
-       eleven rating chips, twelve decade chips and eight full-width sort rows
-       at one visual weight: ~550px of undifferentiated list that no viewport
-       could show whole. Shortening the content is the fix — the max-height
-       below is only a safety net, and clampDropdown() sets the real cap from
-       the room actually left under the toggle.
+    /* ---------- el panel de filtros ----------
+       Cuatro filas, una pregunta por fila, y un pie. La versión anterior
+       apilaba once filtros de nota, doce de década y ocho filas de orden a todo
+       el ancho, todos con el mismo peso: ~550px de lista uniforme que ningún
+       viewport podía mostrar entera. El arreglo es acortar el contenido; el
+       max-height de abajo es solo una red de seguridad, y clampDropdown() pone
+       el límite real según el hueco que queda bajo el toggle.
 
-       Everything inside is scoped under .filter-panel so it outranks
-       `.av-dropdown button` (0,1,1) without re-declaring that fight per rule. */
+       Todo lo de dentro va bajo .filter-panel para que gane a
+       .av-dropdown button (0,1,1) sin repetir esa pelea en cada regla. */
     .filter-panel {
       width: 316px;
       padding: 0;
       max-height: calc(100vh - 132px);
-      /* dvh where it exists: on a phone the dynamic viewport is shorter than the
-         100vh one once the browser bars retract, and this is a fallback that
-         clampDropdown() overwrites anyway. Two declarations, second wins. */
+      /* dvh donde exista: en un móvil el viewport dinámico es más bajo que el
+         de 100vh cuando se retiran las barras del navegador. Es un respaldo que
+         clampDropdown() sobrescribe igualmente. Dos declaraciones: gana la
+         segunda. */
       max-height: calc(100dvh - 132px);
       overflow-y: auto;
       overscroll-behavior: contain;
@@ -515,8 +518,8 @@
       font-stretch: var(--wd-label);
       color: var(--faint);
     }
-    /* The rating row carries its own "clear" in the label line, so the header
-       and the affordance share one row instead of costing two. */
+    /* La fila de nota lleva su propio "limpiar" en la línea de la etiqueta,
+       así que la cabecera y la acción comparten fila en vez de ocupar dos. */
     .filter-head {
       display: flex;
       align-items: center;
@@ -526,22 +529,22 @@
     }
     .filter-head .filter-label { margin-bottom: 0; }
 
-    /* The rating filter is the app's own star scale, not a list of numbers: the
-       control looks like the thing it filters. Five stars, one per whole point,
-       filled to the threshold by starFill() — the same function the form and the
-       album page use — so a 4,5 threshold half-fills the fifth star exactly the
-       way an album rated 4,5 does.
+    /* El filtro de nota es la escala de estrellas de la app, no una lista de
+       números: el control se parece a lo que filtra. Cinco estrellas, una por
+       punto entero, rellenas hasta el umbral con starFill(), la misma función
+       del formulario y de la ficha del álbum, así que un umbral de 4,5 llena
+       media quinta estrella igual que un álbum valorado con 4,5.
 
-       One encoding of the number, not three: the stars carry the position, the
-       figure beside them carries the value, and the half step is drawn as the
-       half star it is. A tick rail under the stars used to sit here and was
-       cut — it repeated both, which is the "two codifications of one number"
-       this app already removed from the song rows.
+       Una sola codificación del número, no tres: las estrellas dan la posición,
+       la cifra de al lado da el valor, y el medio paso se dibuja como la media
+       estrella que es. Antes había una regleta bajo las estrellas y se quitó:
+       repetía las dos cosas, que es la doble codificación de un número que la
+       app ya había eliminado de las filas de canciones.
 
-       The scale is a fixed 208px rather than the full row: five stars spread
-       over the whole width stop reading as an instrument and start reading as
-       five loose dots. The figure is what makes this a *minimum* legible —
-       stars alone cannot say "3,5 or more". */
+       La escala mide 208px fijos y no todo el ancho: cinco estrellas repartidas
+       por la fila entera dejan de leerse como un instrumento y pasan a ser cinco
+       puntos sueltos. La cifra es lo que hace legible que esto es un mínimo:
+       las estrellas solas no dicen "3,5 o más". */
     .filter-rowline { display: flex; align-items: center; gap: 14px; }
     .filter-scale {
       display: block;
@@ -555,10 +558,10 @@
       user-select: none;
     }
     .filter-scale:hover { background: var(--hover); }
-    /* Each star fills one fifth of the scale so the glyph sits exactly where
-       ratingFromPointer() thinks it does. The glyph is centred in its box,
-       which is what makes the 50% gradient cut land on the star's own middle:
-       starFill only ever yields 0, 50 or 100 here, and all three are exact. */
+    /* Cada estrella ocupa un quinto de la escala, así que el glifo cae donde
+       ratingFromPointer() cree que está. El glifo va centrado en su caja, y eso
+       hace que el corte del degradado al 50% caiga en el centro de la estrella:
+       aquí starFill solo devuelve 0, 50 o 100, y los tres son exactos. */
     .filter-stars { display: flex; }
     .filter-panel .filter-stars .star {
       flex: 1 1 0;
@@ -579,9 +582,9 @@
     }
     .filter-readout[data-empty="true"] { color: var(--muted); font-weight: 500; }
 
-    /* Década and order are choices, so they are the same control: a hairline
-       chip. Order is eight options that do not need their prose on screen, so
-       it runs two columns with the long form kept in the tooltip. */
+    /* Década y orden son elecciones, así que usan el mismo control: un chip de
+       línea fina. Orden son ocho opciones que no necesitan su texto completo en
+       pantalla, así que va a dos columnas y la forma larga queda en el tooltip. */
     .chip-grid { display: flex; flex-wrap: wrap; gap: 4px; }
     .chip-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 
@@ -605,20 +608,21 @@
       border-color: var(--line-hi);
       background: var(--hover);
     }
-    /* A filled chip already says "this one". The menu's checkmark is for rows
-       of plain text; on a chip it is a second signal for the same thing. */
+    /* Un chip relleno ya dice "este". El check del menú es para filas de texto
+       normal; en un chip sería una segunda señal para lo mismo. */
     .filter-panel .filter-chip[aria-checked="true"] { color: var(--on-bone); background: var(--bone); border-color: var(--bone); }
     .filter-panel .filter-chip[aria-checked="true"]::after { content: none; }
-    /* `.av-dropdown button` sets display:flex, which beats the hidden attribute's
-       UA rule. Without this the clear chip is invisible and still clickable. */
+    /* .av-dropdown button pone display:flex, que gana a la regla hidden del
+       navegador. Sin esto, el chip de limpiar queda invisible y aun así se puede
+       pulsar. */
     .filter-panel .filter-chip[hidden] { display: none; }
-    /* Only shown while there is a threshold to take away. */
+    /* Solo se muestra mientras haya un umbral que quitar. */
     .filter-chip-clear { height: 24px; padding: 0 8px; font-size: 11.5px; }
 
-    /* The foot is the only filled surface in the panel, and only just: it separates
-       "the filters above" from the one thing that undoes them. With nothing
-       active there is nothing to undo, so the whole band goes — an empty strip
-       reads as a panel that failed to render. */
+    /* El pie es la única superficie con fondo del panel, y por poco: separa los
+       filtros de arriba de lo único que los deshace. Sin nada activo no hay nada
+       que deshacer, así que la banda entera desaparece: una franja vacía parece
+       un panel que no se pintó. */
     .filter-foot { padding: 9px 14px; background: var(--inset); }
     .filter-foot[hidden] { display: none; }
 
@@ -634,10 +638,11 @@
     }
     .filter-panel .filter-reset:hover { color: var(--text); background: var(--hover); }
 
-    /* Density is a view preference, not a filter: it gets the last row before
-       the foot so it stops competing with the things that narrow the list. */
-    /* Scoped so it outranks `.av-dropdown button`'s padding: inside the panel the
-       switch spans the row's content box, not a 9px inset from it. */
+    /* La densidad es una preferencia de vista, no un filtro: ocupa la última
+       fila antes del pie para no competir con lo que estrecha la lista. */
+    /* Va con scope para ganar al padding de .av-dropdown button: dentro del
+       panel el switch ocupa la caja de contenido de la fila, no un margen de
+       9px. */
     .filter-panel .switch-row {
       display: flex;
       align-items: center;
@@ -693,8 +698,9 @@
     .av-btn-pencil:hover { color: var(--pencil-hi); border-color: var(--pencil-hi); background: var(--pencil-wash); }
     .av-btn[disabled], .av-btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
     .av-btn[disabled]:hover { color: var(--soft); border-color: var(--line); background: transparent; }
-    /* A dimmed primary button still reads as a solid filled button, which is
-       the one thing a disabled control must not do. Drop the fill entirely. */
+    /* Un botón principal atenuado sigue pareciendo un botón relleno, y eso es
+       justo lo que no debe parecer un control deshabilitado. Se le quita el
+       relleno del todo. */
     .av-btn-primary[disabled], .av-btn-primary[disabled]:hover {
       opacity: 1;
       background: transparent;
@@ -703,7 +709,7 @@
       cursor: not-allowed;
     }
 
-    /* Provider switch: a segmented control, not separate pills. */
+    /* Selector de proveedor: un control segmentado, no pastillas sueltas. */
     .chip {
       height: 26px;
       padding: 0 9px;
@@ -716,11 +722,12 @@
     .chip:hover { color: var(--text); }
     .chip.active { color: var(--on-bone); background: var(--bone); }
 
-    /* Punctuation that holds a line together: dimmer than the words around it,
-       never so dim that it stops reading as a separator. */
+    /* Puntuación que sostiene una línea: más tenue que las palabras de al lado,
+       pero nunca tanto como para dejar de leerse como separador. */
     .sep { color: var(--sep); }
 
-    /* The sleeve is the only rectangle on the page: 1px hairline, 2px radius, no shadow. */
+    /* La portada es el único rectángulo de la página: línea de 1px, radio de
+       2px y sin sombra. */
     .sleeve {
       position: relative;
       display: block;
@@ -741,10 +748,10 @@
     .sleeve:hover { border-color: var(--line-hi); }
     .sleeve:hover img { filter: brightness(1.07) saturate(1.04); }
 
-    /* A cover we do not have is a record sleeve with nothing printed on it: the
-       same hairline ring the empty catalog draws, sized to the sleeve. It is
-       drawn in CSS instead of baked into a data URI because a data URI cannot
-       read --bone, and would stay a dark tile the moment the page went light. */
+    /* Una portada que no tenemos es una funda sin nada impreso: el mismo anillo
+       fino del catálogo vacío, al tamaño de la funda. Se dibuja con CSS y no
+       dentro de un data URI porque un data URI no puede leer --bone y se
+       quedaría oscuro en cuanto la página pasara a claro. */
     .sleeve-blank {
       display: grid;
       place-items: center;
@@ -787,8 +794,8 @@
     .field:focus { border-color: var(--bone); }
     .field[aria-invalid="true"] { border-color: var(--pencil); }
 
-    /* One label style for the whole form instead of a dozen inline Tailwind
-       strings that drift apart from each other. */
+    /* Un solo estilo de etiqueta para todo el formulario, en vez de una docena
+       de clases de Tailwind en línea que acaban separándose. */
     .av-form-label {
       display: block;
       font-size: 12px;
@@ -797,10 +804,10 @@
       color: var(--soft);
     }
     .form-group { min-width: 0; }
-    /* Sibling spacing for groups stacked in the flow. NOT for the ones inside a
-       grid: the grid already has its own gap, and a margin on the second item
-       pushed "Año" 13px below "Artista" so two fields of the same height no
-       longer lined up. Same trap as .form-group inside .av-dropdown. */
+    /* Separación entre grupos apilados en el flujo, NO para los que van dentro
+       de una rejilla: la rejilla ya tiene su gap, y un margen en el segundo
+       empujaba "Año" 13px por debajo de "Artista" y descuadraba dos campos de
+       la misma altura. La misma trampa que .form-group dentro de .av-dropdown. */
     .form-group + .form-group { margin-top: 13px; }
     .x-grid > .form-group + .form-group { margin-top: 0; }
     .form-hint { margin-top: 5px; font-size: 11px; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
@@ -816,9 +823,9 @@
     .form-error::before { content: "!"; font-weight: 700; }
     .form-error[hidden] { display: none; }
 
-    /* ---------- cover picker ----------
-       The preview is the control: click it, or drop a file on it. The old bare
-       file input was the only affordance and it was in a different column. */
+    /* ---------- selector de portada ----------
+       La vista previa es el control: se pulsa o se suelta un archivo encima.
+       Antes el único control era un input de archivo pelado en otra columna. */
     .cover-drop {
       position: relative;
       display: grid;
@@ -834,10 +841,10 @@
     .cover-drop:hover { border-color: var(--bone); color: var(--soft); }
     .cover-drop.over { border-color: var(--bone); background: var(--bone-wash); color: var(--bone); }
     .cover-drop img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    /* Below the two-column breakpoint the drop zone was the full column width,
-       and a full-width 1:1 square is tall enough to push the title field and
-       the star picker off the first screen. Capped here for the same reason
-       #detailCover is capped below. */
+    /* Bajo el punto de quiebre de dos columnas, la zona de soltar ocupaba todo
+       el ancho, y un cuadrado 1:1 a todo el ancho es tan alto que empujaba el
+       título y las estrellas fuera de la primera pantalla. Se limita aquí por lo
+       mismo que se limita #detailCover más abajo. */
     @media (max-width: 767px) { .cover-drop { max-width: 168px; } }
     .cover-drop .cover-hint { display: block; text-align: center; padding: 10px; font-size: 11.5px; line-height: 1.6; }
     .cover-drop .cover-glyph {
@@ -859,9 +866,9 @@
       overflow-wrap: anywhere;
     }
 
-    /* The rating control is one slider that happens to be drawn as five stars:
-       ten half-steps between 0,5 and 5. Ten separate buttons meant ten tab
-       stops and no way to reach a half step from the keyboard. */
+    /* El control de nota es un deslizador dibujado como cinco estrellas: diez
+       medios pasos entre 0,5 y 5. Diez botones separados eran diez paradas de
+       Tab y ninguna forma de llegar al medio paso con el teclado. */
     .star-picker {
       display: inline-flex;
       align-items: center;
@@ -886,8 +893,9 @@
       line-height: 26px;
       text-align: center;
       color: transparent;
-      /* Two tokens, one per half. They are not --bone on purpose: a half-star
-         needs the lit and unlit halves to differ in lightness, not in hue. */
+      /* Dos colores, uno por mitad. No son --bone a propósito: una media
+         estrella necesita que la mitad encendida y la apagada difieran en
+         luminosidad, no en tono. */
       background-image: linear-gradient(90deg, var(--star-on) var(--fill, 0%), var(--star-off) var(--fill, 0%));
       -webkit-background-clip: text;
       background-clip: text;
@@ -920,9 +928,9 @@
       box-shadow: 0 40px 120px var(--shadow);
     }
 
-    /* Actions live outside the scroller so "Guardar álbum" is always one click
-       away, on a phone at the bottom of the thumb's reach and on a desktop
-       without scrolling past a fifteen-song editor. */
+    /* Las acciones viven fuera del scroll para que "Guardar álbum" siempre esté
+       a un clic: en un móvil al alcance del pulgar y en escritorio sin bajar
+       por un editor de quince canciones. */
     .modal-foot {
       display: flex;
       align-items: center;
@@ -941,8 +949,9 @@
       .modal-foot > div .av-btn { flex: 1; justify-content: center; }
     }
 
-    /* Status line inside the modal. Success is bone, never a borrowed green:
-       in this app colour belongs to the covers. A glyph carries the meaning. */
+    /* Línea de estado dentro del modal. El éxito es bone, nunca un verde
+       prestado: en esta app el color pertenece a las portadas. El significado
+       lo lleva un glifo. */
     .status {
       display: flex;
       align-items: baseline;
@@ -1033,8 +1042,9 @@
       color: var(--faint);
       font-variant-numeric: tabular-nums;
     }
-    /* The score is the datum this app is about, so it gets the one colour that
-       means "value" everywhere else. The year and the count step back. */
+    /* La nota es el dato central de la app, así que lleva el único color que
+       significa "valor" en el resto de la interfaz. El año y el conteo pasan a
+       segundo plano. */
     .album-foot .score { color: var(--bone); font-size: 12px; }
     .album-foot .album-actions { margin-left: auto; display: flex; gap: 2px; }
     @media (max-width: 559px) { .album-foot-meta { display: none; } }
@@ -1045,8 +1055,8 @@
       padding: 0 8px;
       margin: -6px 0;
       opacity: 0;
-      /* opacity alone leaves the buttons in the tab order while invisible, so a
-         keyboard user tabs into two controls they cannot see. */
+      /* Solo con opacity, los botones siguen en el orden de Tab aunque no se
+         vean, así que quien usa teclado cae en dos controles invisibles. */
       visibility: hidden;
     }
     .album-card:focus-within .album-actions,
@@ -1055,16 +1065,17 @@
     .album-foot .danger:hover { color: var(--pencil); }
     @media (hover: none) { .album-actions { opacity: 1; } .album-foot button { opacity: 1; visibility: visible; } }
 
-    /* ---------- tracklist: the chart is the control ----------
-       A five-point scale stretched across 1500px stops being a rating and
-       starts being a progress bar, so the list keeps a reading measure.
-       The old row had a 3px bar on the left for shape and a separate star row on
-       the right for the value: two encodings of one number. Now there is one
-       bar under each title, its length is the score, and you set the score by
-       clicking anywhere along it. Rows are already ordered favourite-first, so
-       the staircase the left bars were drawing is the staircase the list makes
-       on its own. Spanning the column also widens the target from 176px to the
-       full row, which is the difference between aiming and clicking. */
+    /* ---------- lista de canciones: la barra es el control ----------
+       Una escala de cinco puntos estirada a 1500px deja de ser una nota y pasa
+       a ser una barra de progreso, así que la lista mantiene una medida de
+       lectura. La fila anterior tenía una barra de 3px a la izquierda para la
+       forma y una fila de estrellas a la derecha para el valor: dos
+       codificaciones de un número. Ahora hay una barra bajo cada título, su
+       longitud es la nota y se cambia pulsando en cualquier punto de ella. Las
+       filas ya van ordenadas de favoritas a menos, así que la escalera que
+       dibujaban las barras de la izquierda la dibuja la propia lista. Ocupar la
+       columna también amplía el objetivo de 176px a la fila entera, que es la
+       diferencia entre apuntar y acertar. */
     #trackList { max-width: 1120px; }
 
     .track-row {
@@ -1084,7 +1095,8 @@
       color: var(--faint);
       text-align: right;
       align-self: start;
-      /* Sits on the title's baseline, not at the top of the taller input. */
+      /* Se alinea con la línea base del título, no con la parte superior del
+         input, que es más alto. */
       padding-top: 10px;
     }
 
@@ -1092,10 +1104,11 @@
     .track-name {
       display: block;
       width: 100%;
-      /* The same box as a .field: 36px with the text centred by the control
-         itself. At its natural 22px it was the one input in the app that did
-         not match the others. Ghost border and padding stay: the -4px pulls
-         the text back onto the row's left edge, level with the rating bar. */
+      /* La misma caja que un .field: 36px y el texto centrado por el propio
+         control. Con sus 22px naturales era el único input de la app que no
+         coincidía con los demás. El borde y el padding fantasma se quedan: el
+         -4px devuelve el texto al borde izquierdo de la fila, a la altura de la
+         barra de nota. */
       height: 36px;
       padding: 0 4px;
       margin-left: -4px;
@@ -1112,8 +1125,8 @@
     .track-name:hover { border-color: var(--line); }
     .track-name:focus { outline: none; border-color: var(--line-focus); background: var(--field); }
 
-    /* The slider. Track behind, fill in bone, and a ghost that follows the
-       pointer so the half-step you are about to commit is visible first. */
+    /* El deslizador. Pista detrás, relleno en bone y un fantasma que sigue al
+       puntero para ver antes el medio paso que vas a fijar. */
     .track-scale {
       position: relative;
       display: block;
@@ -1143,7 +1156,8 @@
       color: var(--soft);
       text-align: right;
       align-self: start;
-      /* Same as .track-rank: level with the title, not with the input's top. */
+      /* Igual que .track-rank: a la altura del título, no de la parte superior
+         del input. */
       padding-top: 10px;
     }
     .track-scale:hover ~ .track-score { color: var(--text); }
@@ -1158,8 +1172,8 @@
       color: var(--faint);
       font-size: 11px;
       opacity: 0;
-      /* visibility, not just opacity: an invisible button is still focusable
-         and still clickable, which is worse than not there. */
+      /* visibility, no solo opacity: un botón invisible sigue siendo enfocable
+         y pulsable, y eso es peor que no estar. */
       visibility: hidden;
     }
     .track-row:hover .track-tools button,
@@ -1170,7 +1184,8 @@
     @media (hover: none) {
       .track-tools button { opacity: 1; visibility: visible; }
     }
-    /* Hover-revealed controls still need a visible keyboard focus ring. */
+    /* Los controles que aparecen con hover también necesitan un anillo de foco
+       visible al usar teclado. */
     .track-tools button:focus-visible { opacity: 1; visibility: visible; }
 
     .track-empty {
@@ -1196,27 +1211,27 @@
     .detail-dirty { font-size: 12px; color: var(--bone); }
     .detail-dirty[hidden] { display: none; }
 
-    /* ---------- API import ----------
-       Picking a record is the one screen that has to choose between near
-       identical titles, so the row carries what the choice actually turns on:
-       what the release is (secondary types, EP), how complete it is (track
-       count) and whether the other provider had it too. The row is the button
-       — the arrow only confirms it, so it costs no horizontal room — and the
-       rows are separated by hairlines instead of being separate cards, which
-       makes the list read as one printed index. */
+    /* ---------- importación desde la API ----------
+       Elegir un disco es la pantalla que tiene que decidir entre títulos casi
+       iguales, así que la fila lleva lo que de verdad importa: qué es el
+       lanzamiento (tipos secundarios, EP), cuánto trae (nº de pistas) y si el
+       otro proveedor también lo tenía. La fila es el botón; la flecha solo lo
+       confirma y no gasta ancho. Las filas se separan con líneas finas en vez
+       de ser tarjetas sueltas, y así la lista se lee como un índice impreso. */
     .import-band { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); }
     .import-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 11px; }
     .import-row .field { flex: 1 1 16rem; min-width: 0; }
-    /* Three controls, one box. The switch was 26px, the button 34px and the
-       field 36px, all standing next to each other in the same row; now they
-       share the 36px of a .field. The chips lose the frame's 1px top and
-       bottom, so they are 34px inside it. Scoped to the row on purpose: .av-btn
-       and .chip are 34px and 26px everywhere else. */
+    /* Tres controles, una caja. El switch medía 26px, el botón 34px y el campo
+       36px, todos juntos en la misma fila; ahora comparten los 36px de un
+       .field. Los chips pierden 1px arriba y abajo del marco, así que quedan en
+       34px dentro. Va con scope a la fila a propósito: .av-btn y .chip miden
+       34px y 26px en el resto de la app. */
     .import-row .av-btn { height: 36px; }
     .import-row .segmented .chip { height: 34px; }
-    /* A segmented control needs a frame to segment; the provider chips used to
-       be loose buttons with a gap between them. No overflow:hidden, or the
-       focus ring of the outer chips gets clipped. */
+    /* Un control segmentado necesita un marco que lo separe; antes los chips de
+       proveedor eran botones sueltos con un hueco entre ellos. Sin
+       overflow:hidden, o el anillo de foco de los chips de los extremos se
+       recorta. */
     .segmented { display: inline-flex; border: 1px solid var(--line); border-radius: 2px; }
     .segmented .chip { border-radius: 0; }
     .segmented .chip:first-child { border-radius: 1px 0 0 1px; }
@@ -1244,8 +1259,8 @@
       line-height: 1.55;
       text-align: center;
     }
-    /* The count and its sources sit on the rule that opens the list: the status
-       line is transient (searching, importing, failed), this is structural. */
+    /* El conteo y sus fuentes van sobre la línea que abre la lista: la línea de
+       estado es pasajera (buscando, importando, error), esto es estructural. */
     .import-count {
       display: flex;
       flex-wrap: wrap;
@@ -1273,9 +1288,10 @@
     @keyframes metadataIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
     .metadata-slot { animation: metadataIn .4s cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(var(--index) * 45ms); }
 
-    /* The four columns of a result row live here, once. The skeleton row below
-       joins this rule instead of copying it, so a change to the grid cannot
-       leave the placeholder one column out of step with the real thing. */
+    /* Las cuatro columnas de una fila de resultado viven aquí, una sola vez. La
+       fila esqueleto de abajo se suma a esta regla en vez de copiarla, así que
+       un cambio en la rejilla no puede descuadrar el marcador respecto a la
+       fila real. */
     .metadata-result,
     .metadata-skeleton {
       display: grid;
@@ -1291,9 +1307,9 @@
     .metadata-result[disabled] { cursor: default; }
     .metadata-result[aria-current="true"] { background: var(--bone-wash); border-color: var(--bone-wash); }
 
-    /* Exactly one child, always: the image or the blank. Emitting both used to
-       put four nodes into a three-column grid, which pushed the arrow onto a
-       row of its own and drew the blank disc on top of the title. */
+    /* Siempre un solo hijo: la imagen o el hueco. Emitir los dos metía cuatro
+       nodos en una rejilla de tres columnas, empujaba la flecha a una fila
+       propia y dibujaba el disco vacío encima del título. */
     .metadata-thumb {
       position: relative;
       display: block;
@@ -1305,8 +1321,8 @@
       background: var(--inset);
     }
     .metadata-cover { display: block; width: 100%; height: 100%; object-fit: cover; }
-    /* No art is a sleeve with nothing printed on it, the same motif as
-       .sleeve-blank and the empty catalog. */
+    /* Sin portada es una funda sin nada impreso, el mismo motivo que
+       .sleeve-blank y el catálogo vacío. */
     .metadata-thumb.is-blank::after {
       content: "";
       position: absolute;
@@ -1333,10 +1349,9 @@
     }
     .metadata-line { margin-top: 2px; font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
     .metadata-line .num { color: var(--soft); }
-    /* The provider belongs to the row, not only to the count above the list:
-       with "Todo" active it is the one fact that tells you which button the
-       arrow will actually fire, and it gives the wide row a right-hand column
-       instead of 400px of paper. */
+    /* El proveedor pertenece a la fila, no solo al conteo de arriba: con "Todo"
+       activo es el dato que dice qué botón va a pulsar la flecha, y le da a la
+       fila ancha una columna a la derecha en vez de 400px de papel. */
     .metadata-src {
       font-size: 10.5px;
       font-weight: 500;
@@ -1362,8 +1377,8 @@
       text-transform: uppercase;
       white-space: nowrap;
     }
-    /* The one tag that means something: this is not the plain studio album, so
-       it is the only one that gets the accent wash. */
+    /* La única etiqueta que significa algo: no es el álbum de estudio normal,
+       así que es la única que lleva el fondo de acento. */
     .metadata-tag[data-kind="variant"] { border-color: var(--bone-wash); background: var(--bone-wash); color: var(--bone-bright); }
 
     .metadata-go {
@@ -1383,19 +1398,20 @@
     .metadata-result[aria-current="true"] .metadata-go { color: var(--bone-bright); }
     @media (hover: none) { .metadata-go { opacity: 1; visibility: visible; } }
 
-    /* ---------- the search skeleton ----------
-       Three providers answering at once takes long enough that the list used to
-       sit on an empty band under one line of text: the wait was announced but
-       not drawn. These are the row that is coming, at the size it will arrive
-       at, with the words taken out — so the page does not jump when the results
-       land.
+    /* ---------- esqueleto de búsqueda ----------
+       Que tres proveedores contesten a la vez tarda lo suficiente como para que
+       la lista se quedara en una banda vacía bajo una línea de texto: la espera
+       se anunciaba, pero no se dibujaba. Esto es la fila que viene, con el
+       tamaño con el que llegará y sin las palabras, para que la página no salte
+       cuando aparezcan los resultados.
 
-       Plain divs sharing .metadata-skeleton, never .metadata-result: the real
-       row is a button and these must not be. Nothing here carries a
-       data-mb-release or data-itunes-id, so the click delegates below cannot
-       reach it, arrow-key navigation skips it and it is absent from the tab
-       order. aria-hidden because the status line above is what should be heard —
-       four placeholder rectangles announced as four list items is noise. */
+       Son divs normales con .metadata-skeleton, nunca .metadata-result: la fila
+       real es un botón y estos no deben serlo. Nada de aquí lleva
+       data-mb-release ni data-itunes-id, así que el clic delegado de abajo no
+       los alcanza, la navegación con flechas los salta y no están en el orden
+       de Tab. aria-hidden porque lo que debe oírse es la línea de estado de
+       arriba: cuatro rectángulos anunciados como cuatro elementos de lista son
+       ruido. */
     .sk { display: block; background: var(--inset); border-radius: 2px; }
     .sk-thumb { width: 46px; height: 46px; }
     .sk-line { height: 9px; }
@@ -1404,14 +1420,14 @@
     .sk-line-src { width: 54px; height: 7px; }
     @keyframes skPulse { 0%, 100% { opacity: .5; } 50% { opacity: 1; } }
     .metadata-slot.is-loading .sk { animation: skPulse 1.15s ease-in-out infinite; }
-    /* The cascade the real rows get on arrival would replay here on every
-       keystroke that starts a search, and a skeleton that staggers is just a
-       skeleton that flickers. It appears at once and then breathes. */
+    /* La cascada que las filas reales tienen al llegar se repetiría aquí con
+       cada tecla que inicia una búsqueda, y un esqueleto escalonado es solo un
+       esqueleto que parpadea. Aparece de golpe y luego respira. */
     .metadata-slot.is-loading { animation: none; }
 
-    /* ---------- section scaffolding ----------
-       The row under the top bar answers two questions at once: where am I, and
-       how much is here. Left is the trail, right is the count. */
+    /* ---------- estructura de sección ----------
+       La fila bajo la barra superior responde dos preguntas a la vez: dónde
+       estoy y cuánto hay. A la izquierda va la ruta; a la derecha, el conteo. */
     .viewbar {
       display: flex;
       flex-wrap: wrap;
@@ -1434,10 +1450,10 @@
     .stat dd { margin: 2px 0 0; font-size: 27px; font-weight: 600; font-stretch: var(--wd-stat); letter-spacing: -.02em; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1.1; }
     .stat-note { margin-top: 2px; font-size: 11px; color: var(--faint); }
 
-    /* The empty state is the first thing anyone sees, and it was set at the same 19px
-       as the breadcrumb it can sit under — no hierarchy at all. The word goes to
-       the hero cut at a size that can hold the page; the paragraph drops to one
-       measure and stays where the eye already is. */
+    /* El estado vacío es lo primero que se ve, y estaba a los mismos 19px que
+       la miga de pan que puede tener encima: sin jerarquía. El título usa el
+       corte del hero a un tamaño que sostiene la página; el párrafo baja a una
+       sola medida y se queda donde ya está la vista. */
 .empty { display: grid; justify-items: start; gap: 16px; padding: 60px 0 64px; max-width: 46ch; }
     /* `display: grid` de arriba le gana al `[hidden]` de la UA, así que el
        estado vacío necesita su propio hidden o no se oculta nunca. */
@@ -1500,14 +1516,15 @@
       letter-spacing: -.03em;
       color: var(--text-bright);
       overflow-wrap: break-word;
-      /* An album title is the one place a lone last word is genuinely ugly: the
-         heading is the largest text in the app and wraps over two or three
-         lines. Balance evens the rag out. */
+      /* El título de un álbum es el único sitio donde una última palabra sola
+         queda fea de verdad: es el texto más grande de la app y ocupa dos o tres
+         líneas. Balance empareja los finales de línea. */
       text-wrap: balance;
     }
     .detail-of { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-    /* The one place a big number appears, and it is the album's score. Condensed
-       at the hero cut so it reads as a printed figure rather than a stat card. */
+    /* El único sitio donde aparece un número grande, y es la nota del álbum.
+       Va condensado con el corte del hero para que se lea como una cifra
+       impresa y no como una tarjeta de estadística. */
     .detail-value {
       font-size: 30px;
       font-weight: 600;
@@ -1518,18 +1535,19 @@
       color: var(--bone);
     }
     .detail-value[data-empty="true"] { font-size: 15px; font-weight: 500; font-stretch: var(--wd-head); letter-spacing: 0; color: var(--muted); }
-    /* A 350px cover pushed everything else off the phone screen. */
+    /* Una portada de 350px empujaba todo lo demás fuera de la pantalla del
+       móvil. */
     @media (max-width: 767px) { #detailCover { max-width: 148px; } }
 
     .fade-in { animation: fadeIn .2s ease both; }
     @keyframes fadeIn { from { opacity: .5; } to { opacity: 1; } }
 
-    /* Fifteen covers appearing at once is a wall. Cascading them in over half a
-       second is the difference between a grid and a dump — but only the first
-       paint gets it. renderCatalog() runs again on every keystroke of the
-       search box, every sort and every page change, and re-animating fifteen
-       cards each time would make filtering feel like it was fighting back.
-       JS puts .grid-enter on the container once, on the first render. */
+    /* Quince portadas apareciendo a la vez son un muro. Que entren en cascada
+       durante medio segundo es la diferencia entre una rejilla y un volcado,
+       pero solo en el primer pintado. renderCatalog() se ejecuta otra vez con
+       cada tecla de la búsqueda, cada orden y cada cambio de página, y volver a
+       animar quince tarjetas cada vez haría que filtrar pareciera resistirse.
+       JS pone .grid-enter en el contenedor una vez, en el primer render. */
     @keyframes cardIn { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: none; } }
     .grid-enter > .album-card {
       animation: cardIn .42s cubic-bezier(.16, 1, .3, 1) both;
@@ -1557,47 +1575,45 @@
       }
     }
 
-    /* ---------- the bridge ----------
-       Bootstrap is the base layer: Reboot plus the preflight-parity block at
-       the top of this sheet. Its *utilities* are not used, and that is a
-       measured decision, not a stylistic one — every one of them is
-       `!important`
-       (`display:none!important`, `gap:.5rem!important`, `margin-top:1rem!important`),
-       and its responsive prefix is `d-sm-*` / `gap-md-*`, not `sm:d-*` /
-       `md:gap-*`. Mapping names across produced real regressions: the
-       "Añadir álbum" label lost its `sm:inline` because a !important
-       `d-none` outranked the replacement, and `md:gap-12` silently fell back
-       to the base gap because no such responsive utility exists.
+    /* ---------- el puente ----------
+       Bootstrap es la capa base: Reboot más el bloque de paridad con preflight
+       del principio de esta hoja. Sus utilidades no se usan, y es una decisión
+       medida, no de estilo: todas son !important (display:none!important,
+       gap:.5rem!important, margin-top:1rem!important), y su prefijo responsive
+       es d-sm-* / gap-md-*, no sm:d-* / md:gap-*. Traducir los nombres provocó
+       fallos reales: la etiqueta "Añadir álbum" perdió su sm:inline porque un
+       d-none con !important ganaba al reemplazo, y md:gap-12 caía en silencio
+       al gap base porque esa utilidad responsive no existe.
 
-       So the layout vocabulary lives here, named after the Tailwind utility
-       it replaces (`x-mt-4` is Tailwind's mt-4, 1rem) and holding that exact
-       value. Nothing in this block is !important: the cascade stays the one
-       the rest of the stylesheet was written against.
+       Por eso el vocabulario de layout vive aquí, con el nombre de la utilidad
+       de Tailwind que sustituye (x-mt-4 es el mt-4 de Tailwind, 1rem) y con ese
+       valor exacto. Nada de este bloque es !important: la cascada sigue siendo
+       la misma con la que se escribió el resto de la hoja.
 
-       Three prefixes, three meanings:
-         x-*      a Tailwind utility with its Tailwind value
-         sm:x-*   the same, inside a 640px breakpoint
-         md:x-*   the same, inside a 768px breakpoint
-         .av-*    an app component whose name Bootstrap also ships
+       Tres prefijos, tres significados:
+         x-*      una utilidad de Tailwind con su valor de Tailwind
+         sm:x-*   lo mismo, dentro del breakpoint de 640px
+         md:x-*   lo mismo, dentro del breakpoint de 768px
+         .av-*    un componente de la app cuyo nombre también existe en Bootstrap
 
-       Careful with the notation above: never join two of those prefixes with a
-       slash (writing `sm:x-*` and then `/md:x-*` in one comment). A star
-       directly followed by a slash closes the comment early and the parser
-       drops every rule until it recovers, which is how `.text-ink` stopped
-       existing while still sitting in the file.
+       Cuidado con la notación de arriba: nunca juntes dos de esos prefijos con
+       una barra (escribir sm:x-* y luego /md:x-* en un mismo comentario). Un
+       asterisco seguido de una barra cierra el comentario antes de tiempo y el
+       parser descarta todas las reglas hasta recuperarse; así fue como .text-ink
+       dejó de existir aunque seguía en el archivo.
 
-       Six names had to be renamed rather than defended, because Bootstrap
-       5.3 defines all six: .btn, .dropdown, .toast, .kbd, .modal,
-       .form-label — plus .modal-backdrop, a seventh found by diffing this
-       file's class list against the downloaded bootstrap.min.css.
-       .dropdown was the dangerous one: Bootstrap's is `position: relative`
-       while this app's .dropdown IS the absolutely positioned panel. */
+       Hubo que renombrar seis nombres en vez de defenderlos, porque Bootstrap
+       5.3 define los seis: .btn, .dropdown, .toast, .kbd, .modal y .form-label,
+       más .modal-backdrop, un séptimo que apareció al comparar la lista de
+       clases de este archivo con el bootstrap.min.css descargado. .dropdown era
+       el peligroso: el de Bootstrap es position: relative y el de esta app ES
+       el panel en posición absoluta. */
 
-    /* palette — the eleven variables that used to be declared in
-       tailwind.config, now declared here, once, pointing at the same :root
-       names the rest of this stylesheet uses. !important because Bootstrap's
-       .text-muted is !important, and a theme colour that loses to a reboot
-       default is a bug that only shows in one theme. */
+    /* paleta: las once variables que antes se declaraban en tailwind.config
+       ahora se declaran aquí, una sola vez, apuntando a los mismos nombres de
+       :root que usa el resto de la hoja. Llevan !important porque el .text-muted
+       de Bootstrap es !important, y un color de tema que pierde contra un valor
+       de Reboot es un fallo que solo se ve en un tema. */
     .text-ink { color: var(--text) !important; }
     .text-soft { color: var(--soft) !important; }
     .text-muted { color: var(--muted) !important; }
@@ -1605,17 +1621,17 @@
     .border-line-soft { border-color: var(--line-soft) !important; }
     .hover\:x-text-ink:hover { color: var(--text) !important; }
 
-    /* display */
+    /* cómo se muestra */
     .x-hidden { display: none; }
     .x-flex { display: flex; }
     .x-grid { display: grid; }
 
-    /* position */
+    /* posición */
     .x-fixed { position: fixed; }
     .x-relative { position: relative; }
     .x-inset-0 { inset: 0; }
 
-    /* flex and grid alignment */
+    /* alineación de flex y grid */
     .x-flex-wrap { flex-wrap: wrap; }
     .x-shrink-0 { flex-shrink: 0; }
     .x-items-center { align-items: center; }
@@ -1626,10 +1642,11 @@
     .x-justify-center { justify-content: center; }
     .x-place-items-center { place-items: center; }
 
-    /* Gap does NOT come from Bootstrap, on purpose. Its eighteen gap
-       utilities are all `!important`, and the responsive ones are named
-       `gap-md-5`, not `md:gap-5`, so a name-for-name mapping silently drops
-       the breakpoint. Five values, no !important, exact 640/768 steps. */
+    /* El gap NO viene de Bootstrap, a propósito. Sus dieciocho utilidades de
+       gap son todas !important, y las responsive se llaman gap-md-5, no
+       md:gap-5, así que una traducción nombre por nombre pierde el breakpoint
+       sin avisar. Cinco valores, sin !important y con los pasos exactos de
+       640/768. */
     .x-gap-2 { gap: .5rem; }
     .x-gap-3 { gap: .75rem; }
     .x-gap-4 { gap: 1rem; }
@@ -1642,7 +1659,7 @@
     .x-gap-y-2 { row-gap: .5rem; }
     .x-space-y-2 > * + * { margin-top: .5rem; }
 
-    /* size */
+    /* tamaño */
     .x-w-full { width: 100%; }
     .x-h-full { height: 100%; }
     .x-min-w-0 { min-width: 0; }
@@ -1650,7 +1667,7 @@
     .x-mx-auto { margin-left: auto; margin-right: auto; }
     .x-mr-auto { margin-right: auto; }
 
-    /* spacing */
+    /* espaciado */
     .x-mt-0-5 { margin-top: .125rem; }
     .x-mt-2 { margin-top: .5rem; }
     .x-mt-3 { margin-top: .75rem; }
@@ -1678,7 +1695,7 @@
     .x-bottom-5 { bottom: 1.25rem; }
     .x-right-5 { right: 1.25rem; }
 
-    /* type */
+    /* tipografía */
     .x-t-11-5 { font-size: 11.5px; }
     .x-t-12 { font-size: 12px; }
     .x-t-12-5 { font-size: 12.5px; }
@@ -1690,7 +1707,8 @@
     .x-font-semibold { font-weight: 600; }
     .x-leading-15 { line-height: 1.5; }
     .x-tracking-tight { letter-spacing: -.015em; }
-    /* Arbitrary property syntax was Tailwind's; plain CSS says it directly. */
+    /* La sintaxis de propiedades arbitrarias era de Tailwind; el CSS normal lo
+       dice directamente. */
     .x-stretch-88 { font-stretch: 88%; }
     .x-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .x-sr-only {
@@ -1705,15 +1723,15 @@
       border: 0;
     }
 
-    /* box */
+    /* caja */
     .x-border-t { border-top: 1px solid var(--line); }
     .x-border-b { border-bottom: 1px solid var(--line); }
     .x-overflow-hidden { overflow: hidden; }
     .x-overflow-y-auto { overflow-y: auto; }
     .x-object-cover { object-fit: cover; }
 
-    /* The two hand-built grid layouts. Bootstrap's grid is 12 columns and
-       has no arbitrary template, so these stay ours. */
+    /* Las dos rejillas hechas a mano. La de Bootstrap es de 12 columnas y no
+       tiene plantilla libre, así que estas siguen siendo nuestras. */
     .x-max-w-5xl { max-width: 64rem; }
     .x-max-w-sm { max-width: 24rem; }
     .x-max-w-page { max-width: 97.5rem; }
@@ -1725,9 +1743,10 @@
       .sm\:x-px-7 { padding-left: 1.75rem; padding-right: 1.75rem; }
       .sm\:x-px-8 { padding-left: 2rem; padding-right: 2rem; }
       .sm\:x-py-3 { padding-top: .75rem; padding-bottom: .75rem; }
-      /* Bootstrap's responsive display prefix is d-sm-*, at 576px. These two
-         stay ours so the switch happens at Tailwind's 640px, which is where
-         the top bar's mobile copy was designed to change. */
+      /* El prefijo responsive de display de Bootstrap es d-sm-*, a 576px. Estos
+         dos siguen siendo nuestros para que el cambio ocurra en los 640px de
+         Tailwind, que es donde el texto móvil de la barra estaba pensado para
+         cambiar. */
       .sm\:x-d-none { display: none; }
       .sm\:x-d-inline { display: inline; }
     }

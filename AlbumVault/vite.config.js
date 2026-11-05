@@ -2,10 +2,11 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 /* El proxy de /api se queda en server.js (node server.js, puerto 3000): es el
-   unico camino hacia MusicBrainz, iTunes y el proxy de imagenes, con su cola de
-   peticiones y su allow-list de hosts. En desarrollo Vite corre en 5173 y le
-   reenvia /api al 3000, de modo que las dos_urls dicen exactamente lo mismo.
-   En produccion `npm run build` deja dist/ y server.js lo sirve en :3000. */
+   único camino hacia MusicBrainz, iTunes y el proxy de imágenes, con su cola
+   de peticiones y su lista de hosts permitidos. En desarrollo Vite corre en
+   5173 y reenvía /api al 3000, así que las dos URLs dicen exactamente lo
+   mismo. En producción `npm run build` deja dist/ y server.js lo sirve en
+   :3000. */
 const API_TARGET = process.env.API_TARGET || "http://localhost:3000";
 
 export default defineConfig({

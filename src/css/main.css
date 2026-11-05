@@ -293,11 +293,6 @@ main:focus {
   transition: color var(--transition);
 }
 
-.nav__link[aria-current="location"],
-.menu-panel__link[aria-current="location"] {
-  color: var(--color-signal);
-}
-
 .header-actions {
   display: flex;
   align-items: center;

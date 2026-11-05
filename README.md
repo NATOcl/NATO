@@ -79,7 +79,7 @@ npm test             # ejecución única + informe de cobertura
 npm run test:watch   # modo interactivo
 ```
 
-El informe HTML queda en `coverage/html/index.html`. La última ejecución local obtuvo **22 pruebas exitosas** y una cobertura de **87,8 % de sentencias**, **67,9 % de ramas**, **94,4 % de funciones** y **89,4 % de líneas**.
+El informe HTML queda en `coverage/html/index.html`. La última ejecución local obtuvo **22 pruebas exitosas** y una cobertura de **87,8 % de sentencias**, **67,8 % de ramas**, **95,1 % de funciones** y **89,0 % de líneas**.
 
 Karma busca Chrome o Edge automáticamente. Si no lo encuentra, define la ruta:
 

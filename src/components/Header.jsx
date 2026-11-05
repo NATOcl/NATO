@@ -9,31 +9,6 @@ const getInitialTheme = () => {
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState(getInitialTheme);
-  const [activeSection, setActiveSection] = useState("");
-
-  useEffect(() => {
-    const sections = navLinks
-      .map((link) => document.getElementById(link.href.slice(1)))
-      .filter(Boolean);
-
-    if (sections.length === 0 || typeof IntersectionObserver === "undefined") {
-      return undefined;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const current = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-        if (current) setActiveSection(current.target.id);
-      },
-      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
-    );
-
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     if (!menuOpen) return undefined;
@@ -55,7 +30,6 @@ export default function Header() {
 
   const closeMenu = () => setMenuOpen(false);
   const nextTheme = theme === "dark" ? "claro" : "oscuro";
-  const isCurrent = (href) => activeSection === href.slice(1);
 
   return (
     <header className="site-header navbar navbar-expand-lg">
@@ -77,7 +51,6 @@ export default function Header() {
               key={link.href}
               href={link.href}
               className="nav__link nav-link"
-              aria-current={isCurrent(link.href) ? "location" : undefined}
             >
               {link.label}
             </a>
@@ -118,7 +91,6 @@ export default function Header() {
                   key={link.href}
                   href={link.href}
                   className="menu-panel__link"
-                  aria-current={isCurrent(link.href) ? "location" : undefined}
                   onClick={closeMenu}
                 >
                   {link.label}

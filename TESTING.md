@@ -78,10 +78,10 @@ Los specs se llaman `.spec.js` porque `karma-esbuild` normaliza las entradas a `
 ```text
 Executed 22 of 22 SUCCESS
 
-Statements   : 87.82 % ( 267/304 )
-Branches     : 67.90 % ( 146/215 )
-Functions    : 94.38 % ( 84/89 )
-Lines        : 89.43 % ( 237/265 )
+Statements   : 87.76 % ( 251/286 )
+Branches     : 67.80 % ( 139/205 )
+Functions    : 95.06 % ( 77/81 )
+Lines        : 88.97 % ( 226/254 )
 ```
 
 ## Reproducir

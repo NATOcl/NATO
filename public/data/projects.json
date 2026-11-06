@@ -42,7 +42,7 @@
     "description": "Sitio con rutas para presentar servicios, especialidades y datos de contacto de una veterinaria.",
     "technologies": ["React", "Vite", "Router"],
     "image": "assets/projects/petcare.svg",
-    "imageAlt": "Portada de PetCare con una cruz veterinaria y una huella",
+    "imageAlt": "Portada de PetCare con una cruz veterinaria",
     "demo": "https://natocl.github.io",
     "repo": "https://github.com/NATOcl/NATOcl.github.io"
   }

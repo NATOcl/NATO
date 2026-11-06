@@ -1,4 +1,3 @@
-import portrait from "../assets/portrait.svg";
 import { hero, socials, stats } from "../data/content";
 import Reveal from "./Reveal";
 
@@ -13,7 +12,7 @@ export default function Hero() {
 
       <div className="container hero__inner">
         <div className="row g-4 align-items-center hero__grid">
-          <div className="col-12 col-lg-7">
+          <div className="col-12">
             <Reveal as="p" className="hero__eyebrow">
               {hero.eyebrow}
             </Reveal>
@@ -60,23 +59,6 @@ export default function Hero() {
                   <dd className="hero__stat-value">{stat.value}</dd>
                 </div>
               ))}
-            </Reveal>
-          </div>
-
-          <div className="col-12 col-lg-5">
-            <Reveal as="figure" className="hero__portrait" delay={220}>
-              <img
-                className="hero__portrait-image"
-                src={portrait}
-                alt={hero.portraitAlt}
-                width="480"
-                height="560"
-                fetchPriority="high"
-                decoding="async"
-              />
-              <figcaption className="hero__portrait-caption">
-                Nicolás Troncoso · Ingeniería en Informática
-              </figcaption>
             </Reveal>
           </div>
         </div>

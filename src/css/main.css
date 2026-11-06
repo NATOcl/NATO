@@ -483,57 +483,6 @@ main:focus {
   color: var(--color-line);
 }
 
-.hero__portrait {
-  position: relative;
-  width: 100%;
-  max-width: 22rem;
-  margin: 1.5rem auto 0;
-  padding: 0.75rem;
-  border: 1px solid var(--color-rule);
-  background-color: rgba(19, 34, 46, 0.62);
-}
-
-.hero__portrait::before,
-.hero__portrait::after {
-  content: "";
-  position: absolute;
-  width: 0.75rem;
-  height: 0.75rem;
-  border-color: var(--color-signal);
-  pointer-events: none;
-}
-
-.hero__portrait::before {
-  top: -1px;
-  left: -1px;
-  border-top: 1px solid;
-  border-left: 1px solid;
-}
-
-.hero__portrait::after {
-  right: -1px;
-  bottom: -1px;
-  border-right: 1px solid;
-  border-bottom: 1px solid;
-}
-
-.hero__portrait-image {
-  display: block;
-  width: 100%;
-  height: auto;
-  border: 1px solid rgba(127, 168, 190, 0.3);
-}
-
-.hero__portrait-caption {
-  margin-top: 0.6rem;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  line-height: 1.4;
-  letter-spacing: 0.02em;
-  color: var(--color-line);
-  text-align: right;
-}
-
 .hero__mark {
   position: absolute;
   z-index: 2;
@@ -1437,12 +1386,6 @@ main:focus {
 @media (min-width: 1024px) {
   .budy {
     display: block;
-  }
-
-  .hero__portrait {
-    max-width: none;
-    margin-top: 0;
-    margin-left: auto;
   }
 }
 

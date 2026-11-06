@@ -154,6 +154,67 @@ function serveCvIndex(req, res) {
   }
 }
 
+function resolveDataFile(name) {
+  const candidates = [
+    path.join(CV_DIST, "data", name),
+    path.join(ROOT, "public", "data", name),
+  ];
+
+  return candidates.find((file) => fs.existsSync(file)) || null;
+}
+
+/**
+ * Orígenes que pueden leer la API del CV desde otro dominio: el CV estático
+ * en GitHub Pages y los servidores locales de Vite/servidor raíz.
+ */
+const API_ALLOWED_ORIGINS = new Set([
+  "https://natocl.github.io",
+  "http://localhost:3000",
+  "http://localhost:4173",
+  "http://localhost:5173",
+]);
+
+function applyCors(req, res) {
+  const origin = req.headers.origin;
+  if (origin && API_ALLOWED_ORIGINS.has(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+  }
+}
+
+/**
+ * Expone los JSON del CV como colecciones REST. El frontend consume estos
+ * endpoints y, si no responden, cae al JSON estático (GitHub Pages).
+ */
+function sendCollection(req, res, { file, key, label }) {
+  if (req.method !== "GET" && req.method !== "HEAD") {
+    res.writeHead(405, { Allow: "GET, HEAD" });
+    res.end();
+    return;
+  }
+
+  const filePath = resolveDataFile(file);
+  if (!filePath) {
+    sendJson(res, 503, { error: `No hay datos de ${label} disponibles.` });
+    return;
+  }
+
+  try {
+    const items = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    const { mtime } = fs.statSync(filePath);
+    const collection = Array.isArray(items) ? items : items?.sections;
+
+    sendJson(res, 200, {
+      [key]: key === "sections" ? collection : items,
+      count: Array.isArray(collection) ? collection.length : 0,
+      updatedAt: mtime.toISOString(),
+    });
+  } catch (error) {
+    console.error(`API ${label} error`, error);
+    sendJson(res, 500, { error: `No se pudieron leer ${label}.` });
+  }
+}
+
 function serveAlbumVaultIndex(req, res) {
   const file = path.join(ALBUMVAULT_DIST, "index.html");
   if (!sendFile(req, res, file, {
@@ -172,6 +233,31 @@ function serveAlbumVaultIndex(req, res) {
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, `http://localhost:${PORT}`);
+
+    if (url.pathname === "/api/projects" || url.pathname === "/api/news") {
+      applyCors(req, res);
+
+      if (req.method === "OPTIONS") {
+        res.writeHead(204, { Allow: "GET, HEAD, OPTIONS" });
+        res.end();
+        return;
+      }
+
+      if (url.pathname === "/api/projects") {
+        sendCollection(req, res, {
+          file: "projects.json",
+          key: "projects",
+          label: "proyectos",
+        });
+      } else {
+        sendCollection(req, res, {
+          file: "news.json",
+          key: "sections",
+          label: "noticias",
+        });
+      }
+      return;
+    }
 
     if (url.pathname.startsWith("/api/")) {
       const handled = await handleApi(req, res, url);

@@ -223,6 +223,7 @@ main:focus {
 .site-header .navbar-brand {
   margin: 0;
   padding: 0;
+  color: var(--color-film);
   font-size: inherit;
 }
 
@@ -631,6 +632,15 @@ main:focus {
   color: var(--color-ink);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
+}
+
+.data-source {
+  margin-top: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: var(--color-line);
 }
 
 .data-status {

@@ -14,66 +14,34 @@ const projects = [
   },
 ];
 
-const news = {
-  sections: [
-    {
-      id: "portafolio",
-      title: "Novedades del portafolio",
-      items: [
-        {
-          id: "pruebas",
-          title: "Pruebas unitarias",
-          date: "05 nov 2026",
-          dateTime: "2026-11-05",
-          content: "Se agregaron pruebas.",
-        },
-      ],
-    },
-    {
-      id: "aprendizaje",
-      title: "En aprendizaje",
-      items: [
-        {
-          id: "curso",
-          title: "Curso",
-          date: "2026",
-          dateTime: "2026",
-          content: "Contenido del curso.",
-        },
-      ],
-    },
-  ],
-};
-
 describe("App", () => {
   beforeEach(() => {
     document.documentElement.dataset.theme = "light";
     localStorage.clear();
   });
 
-  it("integra todas las secciones y carga proyectos y noticias desde JSON", async () => {
-    spyOn(window, "fetch").and.callFake((url) => {
-      const payload = String(url).includes("news") ? news : projects;
-      return Promise.resolve({
+  it("integra todas las secciones y carga proyectos desde la API", async () => {
+    spyOn(window, "fetch").and.returnValue(
+      Promise.resolve({
         ok: true,
         status: 200,
-        json: () => Promise.resolve(payload),
-      });
-    });
+        json: () => Promise.resolve(projects),
+      }),
+    );
 
     const { container } = render(<App />);
     await flush();
 
-    ["top", "sobre-mi", "educacion", "conocimientos", "portafolio", "noticias", "certificados", "cursos", "contacto"].forEach(
+    ["top", "sobre-mi", "educacion", "conocimientos", "portafolio", "certificados", "cursos", "contacto"].forEach(
       (id) => {
         expect(container.querySelector(`#${id}`)).not.toBeNull();
       },
     );
 
     expect(container.querySelectorAll(".project-card").length).toBe(1);
-    expect(container.querySelectorAll(".news-board").length).toBe(2);
+    expect(container.querySelector("#noticias")).toBeNull();
     expect(container.querySelector("#contacto form")).not.toBeNull();
-    expect(container.querySelector('.nav-link[href="#noticias"]')).not.toBeNull();
+    expect(container.querySelector('.nav-link[href="#certificados"]')).not.toBeNull();
   });
 
   it("permite cerrar a Budy y quita su nodo del DOM", async () => {

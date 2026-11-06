@@ -5,7 +5,7 @@ export default function Contact() {
   return (
     <footer id="contacto" className="contact">
       <div className="container contact__inner">
-        <p className="contact__tag">08 — contacto</p>
+        <p className="contact__tag">07 — contacto</p>
         <h2 className="contact__title">¿Hablamos de una oportunidad?</h2>
 
         <div className="row g-4 contact__grid">

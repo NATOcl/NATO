@@ -63,7 +63,7 @@ export default function Courses() {
     typeof activeCourse?.pdf === "string" ? activeCourse.pdf : "";
 
   return (
-    <Section id="cursos" index="07" title="Cursos" divider={false}>
+    <Section id="cursos" index="06" title="Cursos" divider={false}>
       <div className="course-list">
         {courses.map((course) => (
           <Reveal

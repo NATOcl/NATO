@@ -4,7 +4,7 @@ import Section from "./Section";
 
 export default function Certificates() {
   return (
-    <Section id="certificados" index="06" title="Certificados">
+    <Section id="certificados" index="05" title="Certificados">
       <Reveal
         as="a"
         href={certificate.href}

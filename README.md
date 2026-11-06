@@ -14,12 +14,11 @@ Portafolio personal de Nicolas Troncoso Olivares, estudiante de Ingeniería en I
 - **React 19 + Vite 8** con componentes funcionales, props, estado y efectos.
 - **Bootstrap 5.3** integrado con la estética propia del sitio:
   - `Navbar` en la cabecera.
-  - `Card` y `Grid` en proyectos y noticias.
+  - `Card` y `Grid` en proyectos.
   - `Button` en los llamados a la acción.
   - `Form` y `FormControl` en el formulario de contacto.
-- **Componentes reutilizables con props:** `Section`, `ProjectCard`, `NewsCard`, `NewsSection` y `ContactForm`.
-- **Datos desde una API REST:** proyectos y noticias se piden a `/api/projects` y `/api/news`; si la API no responde, el hook `useRemoteData` cae automáticamente al JSON de `public/data/`. Así el CV funciona igual en Render y en GitHub Pages.
-- **Sección de noticias con dos tableros** cargados dinámicamente desde `news.json`.
+- **Componentes reutilizables con props:** `Section`, `ProjectCard`, `DataStatus`, `Reveal` y `ContactForm`.
+- **Datos desde una API REST:** los proyectos se piden a `/api/projects`; si la API no responde, el hook `useRemoteData` cae automáticamente al JSON de `public/data/`. Así el CV funciona igual en Render y en GitHub Pages.
 - **Estado e interacción:** tema claro/oscuro persistente, menú móvil, modal de PDF, validación del formulario y reintento de carga de datos.
 - **Accesibilidad:** etiquetas `alt`, formularios con `label`, foco visible, navegación por teclado, `aria-expanded`, `aria-live` y enlace para saltar al contenido.
 - **Rendimiento:** portadas SVG ligeras, `loading="lazy"` y `decoding="async"` en las imágenes de proyectos, JSON asíncrono y build minificado por Vite.
@@ -81,7 +80,7 @@ npm test             # ejecución única + informe de cobertura
 npm run test:watch   # modo interactivo
 ```
 
-El informe HTML queda en `coverage/html/index.html`. La última ejecución local obtuvo **29 pruebas exitosas** y una cobertura de **89,0 % de sentencias**, **70,4 % de ramas**, **93,3 % de funciones** y **90,9 % de líneas**.
+El informe HTML queda en `coverage/html/index.html`. La última ejecución local obtuvo **26 pruebas exitosas** y una cobertura de **88,7 % de sentencias**, **69,4 % de ramas**, **92,9 % de funciones** y **90,6 % de líneas**.
 
 Karma busca Chrome o Edge automáticamente. Si no lo encuentra, define la ruta:
 
@@ -106,10 +105,9 @@ src/App.jsx                orden de las secciones
 src/components/            componentes del CV
 src/config.js              URLs de AlbumVault y de la API (según el build)
 src/hooks/useRemoteData.js carga desde la API REST con respaldo JSON
-src/hooks/useJsonData.js   carga de JSON con estado, error y reintento
 src/data/content.js        perfil, navegación, educación, skills y contacto
 src/css/main.css           estilos propios y ajustes sobre Bootstrap
-public/data/               projects.json y news.json
+public/data/               projects.json
 public/assets/projects/    portadas SVG de los proyectos
 src/assets/portrait.svg    retrato ilustrado del hero
 test/                      specs de Jasmine y utilidades
@@ -123,7 +121,6 @@ server.js                  sirve CV, AlbumVault y la API REST
 ## Editar contenido
 
 - **Proyectos:** `public/data/projects.json`. Cada elemento incluye `title`, `description`, `technologies`, `image`, `imageAlt` y al menos `demo` o `repo`.
-- **Noticias:** `public/data/news.json`. Contiene dos secciones; cada noticia tiene `title`, `date`, `dateTime` y `content`.
 - **Portadas:** `public/assets/projects/`. Se referencian con rutas relativas (`assets/projects/...`) para que funcionen en la raíz o en un subdirectorio.
 - **Retrato:** `src/assets/portrait.svg` es una ilustración vectorial. Para usar una fotografía real, reemplaza el archivo manteniendo una proporción vertical similar (6:7) y actualiza el `alt` si cambia la descripción.
 - **Textos y enlaces del CV:** `src/data/content.js`.
@@ -160,20 +157,19 @@ El workflow [`.github/workflows/deploy-pages.yml`](./.github/workflows/deploy-pa
 
 Requisito único, una sola vez: en **Settings → Pages → Build and deployment** la fuente debe ser **GitHub Actions**. El CV queda en https://natocl.github.io/NATO/.
 
-En ese build, `VITE_ALBUMVAULT_URL`, `VITE_PROJECTS_API_URL` y `VITE_NEWS_API_URL` apuntan a Render. Si Render está dormido o no responde en 8 s, `useRemoteData` usa el JSON local y la sección sigue funcionando; el estado se ve bajo el listado de proyectos.
+En ese build, `VITE_ALBUMVAULT_URL` y `VITE_PROJECTS_API_URL` apuntan a Render. Si Render está dormido o no responde en 8 s, `useRemoteData` usa el JSON local y el portafolio sigue funcionando; el estado se ve bajo el listado de proyectos.
 
 ### Render (app completa)
 
-`render.yaml` define el servicio Node en Render: sirve el CV, AlbumVault y la API REST (`/api/projects`, `/api/news`) en un solo proceso. El servidor necesita Node porque también sirve la app musical y el proxy de metadatos. La API permite CORS solo desde `https://natocl.github.io` y los servidores locales.
+`render.yaml` define el servicio Node en Render: sirve el CV, AlbumVault y la API REST (`/api/projects`) en un solo proceso. El servidor necesita Node porque también sirve la app musical y el proxy de metadatos. La API permite CORS solo desde `https://natocl.github.io` y los servidores locales.
 
 ## API REST
 
 | Método | Ruta | Respuesta |
 | --- | --- | --- |
 | `GET` | `/api/projects` | `{ projects, count, updatedAt }` |
-| `GET` | `/api/news` | `{ sections, count, updatedAt }` |
 
-Las colecciones se leen de `dist/data/` (o de `public/data/` en desarrollo). El frontend consume estos endpoints con `useRemoteData`, que expone `data`, `loading`, `error`, `source` y `reload`; en GitHub Pages el respaldo es `data/projects.json` y `data/news.json`.
+La colección se lee de `dist/data/` (o de `public/data/` en desarrollo). El frontend la consume con `useRemoteData`, que expone `data`, `loading`, `error`, `source` y `reload`; en GitHub Pages el respaldo es `data/projects.json`.
 
 ## Autor
 

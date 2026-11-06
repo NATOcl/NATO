@@ -10,5 +10,3 @@ const env = import.meta.env || {};
 export const albumVaultUrl = env.VITE_ALBUMVAULT_URL || "/albumvault/";
 
 export const projectsApiUrl = env.VITE_PROJECTS_API_URL || "/api/projects";
-
-export const newsApiUrl = env.VITE_NEWS_API_URL || "/api/news";

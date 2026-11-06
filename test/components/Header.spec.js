@@ -15,10 +15,10 @@ describe("Header", () => {
     );
 
     const navLinks = container.querySelectorAll(".nav .nav-link");
-    expect(navLinks.length).toBe(8);
-    expect(Array.from(navLinks).map((link) => link.textContent)).toContain(
-      "Noticias",
-    );
+    expect(navLinks.length).toBe(7);
+    const labels = Array.from(navLinks).map((link) => link.textContent);
+    expect(labels).toContain("Certificados");
+    expect(labels).not.toContain("Noticias");
   });
 
   it("abre y cierra el menú móvil actualizando aria-expanded", () => {

@@ -10,7 +10,6 @@ export const navLinks = [
   { href: "#educacion", label: "Educación" },
   { href: "#conocimientos", label: "Conocimientos" },
   { href: "#portafolio", label: "Portafolio" },
-  { href: "#noticias", label: "Noticias" },
   { href: "#certificados", label: "Certificados" },
   { href: "#cursos", label: "Cursos" },
   { href: "#contacto", label: "Contacto" },

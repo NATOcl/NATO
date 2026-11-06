@@ -202,11 +202,10 @@ function sendCollection(req, res, { file, key, label }) {
   try {
     const items = JSON.parse(fs.readFileSync(filePath, "utf8"));
     const { mtime } = fs.statSync(filePath);
-    const collection = Array.isArray(items) ? items : items?.sections;
 
     sendJson(res, 200, {
-      [key]: key === "sections" ? collection : items,
-      count: Array.isArray(collection) ? collection.length : 0,
+      [key]: items,
+      count: Array.isArray(items) ? items.length : 0,
       updatedAt: mtime.toISOString(),
     });
   } catch (error) {
@@ -234,7 +233,7 @@ const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, `http://localhost:${PORT}`);
 
-    if (url.pathname === "/api/projects" || url.pathname === "/api/news") {
+    if (url.pathname === "/api/projects") {
       applyCors(req, res);
 
       if (req.method === "OPTIONS") {
@@ -243,19 +242,11 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      if (url.pathname === "/api/projects") {
-        sendCollection(req, res, {
-          file: "projects.json",
-          key: "projects",
-          label: "proyectos",
-        });
-      } else {
-        sendCollection(req, res, {
-          file: "news.json",
-          key: "sections",
-          label: "noticias",
-        });
-      }
+      sendCollection(req, res, {
+        file: "projects.json",
+        key: "projects",
+        label: "proyectos",
+      });
       return;
     }
 

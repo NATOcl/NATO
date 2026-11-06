@@ -33,7 +33,7 @@ Los specs se llaman `.spec.js` porque `karma-esbuild` normaliza las entradas a `
 | R3 | `ProjectCard` | Proyecto con demo y repositorio externos | Imagen con `alt`, título, descripción, badges y dos enlaces con `target="_blank"` |
 | R4 | `ProjectCard` | Demo interna (`/albumvault/`) | El enlace no abre pestaña nueva y no se renderiza repo ausente |
 | R5 | `Hero` | Presentación inicial | Nombre, biografía, retrato con `alt`, dos CTA, tres redes y tres estadísticas |
-| R6 | `App` | Integración completa | Existen las nueve secciones y sus ids; se ven tarjetas y tableros de noticias |
+| R6 | `App` | Integración completa | Existen las ocho secciones y sus ids; se ven las tarjetas de proyectos |
 
 ### 2. Estado, props y eventos
 
@@ -60,10 +60,7 @@ Los specs se llaman `.spec.js` porque `karma-esbuild` normaliza las entradas a `
 | --- | --- | --- | --- |
 | D1 | `Portfolio` | La API responde con `{ projects }` | Primero aparece «cargando proyectos…»; luego dos `.project-card`, el aviso «datos desde la API REST» y desaparece el estado |
 | D2 | `Portfolio` | JSON vacío | Se muestra «Todavía no hay proyectos para mostrar» |
-| D3 | `News` | JSON con dos secciones | Se renderizan dos `.news-board`, dos `.news-card` y `<time datetime="…">` |
-| D4 | `News` | Error de red | Se muestra el mensaje de error y el botón Reintentar |
-| D5 | `News` | JSON sin secciones | Se muestra el estado vacío |
-| D6 | `Portfolio` | La API falla y se usa el respaldo | Se ven las tarjetas y el aviso «respaldo JSON local» |
+| D3 | `Portfolio` | La API falla y se usa el respaldo | Se ven las tarjetas y el aviso «respaldo JSON local» |
 
 ### 4. Mocks y aislamiento
 
@@ -83,12 +80,12 @@ Los specs se llaman `.spec.js` porque `karma-esbuild` normaliza las entradas a `
 ## Resultados de la última ejecución
 
 ```text
-Executed 29 of 29 SUCCESS
+Executed 26 of 26 SUCCESS
 
-Statements   : 88.95 % ( 298/335 )
-Branches     : 70.43 % ( 162/230 )
-Functions    : 93.33 % ( 84/90 )
-Lines        : 90.87 % ( 269/296 )
+Statements   : 88.65 % ( 289/326 )
+Branches     : 69.37 % ( 145/209 )
+Functions    : 92.94 % ( 79/85 )
+Lines        : 90.59 % ( 260/287 )
 ```
 
 ## Reproducir

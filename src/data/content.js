@@ -34,8 +34,6 @@ export const hero = {
   eyebrow: "nicolas troncoso olivares",
   title: "NATOcl",
   lead: "Actualmente estudio Ingeniería en Informática en Duoc UC, después de formarme como Técnico en Radiodiagnóstico y Radioterapia. Me apasiona el desarrollo de software y la inteligencia artificial.",
-  portraitAlt:
-    "Retrato ilustrado de Nicolás Troncoso sobre una placa técnica oscura",
   cta: { href: "#portafolio", label: "Ver proyectos" },
   secondaryCta: { href: "#contacto", label: "Hablemos" },
 };

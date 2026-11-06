@@ -109,7 +109,6 @@ src/data/content.js        perfil, navegación, educación, skills y contacto
 src/css/main.css           estilos propios y ajustes sobre Bootstrap
 public/data/               projects.json
 public/assets/projects/    portadas SVG de los proyectos
-src/assets/portrait.svg    retrato ilustrado del hero
 test/                      specs de Jasmine y utilidades
 karma.conf.cjs             configuración de Karma + esbuild + cobertura
 TESTING.md                 plan de pruebas
@@ -122,7 +121,6 @@ server.js                  sirve CV, AlbumVault y la API REST
 
 - **Proyectos:** `public/data/projects.json`. Cada elemento incluye `title`, `description`, `technologies`, `image`, `imageAlt` y al menos `demo` o `repo`.
 - **Portadas:** `public/assets/projects/`. Se referencian con rutas relativas (`assets/projects/...`) para que funcionen en la raíz o en un subdirectorio.
-- **Retrato:** `src/assets/portrait.svg` es una ilustración vectorial. Para usar una fotografía real, reemplaza el archivo manteniendo una proporción vertical similar (6:7) y actualiza el `alt` si cambia la descripción.
 - **Textos y enlaces del CV:** `src/data/content.js`.
 
 ## Capturas

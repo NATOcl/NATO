@@ -1,5 +1,6 @@
 import { useState } from "react";
 import budy from "../assets/budy.webp";
+import { albumVaultUrl } from "../config";
 
 export default function Budy() {
   const [visible, setVisible] = useState(true);
@@ -18,7 +19,7 @@ export default function Budy() {
       </button>
       <a
         className="budy__link"
-        href="/albumvault/"
+        href={albumVaultUrl}
         aria-label="Abrir AlbumVault"
       >
         <img

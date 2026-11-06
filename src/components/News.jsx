@@ -1,10 +1,14 @@
-import useJsonData from "../hooks/useJsonData";
+import { newsApiUrl } from "../config";
+import useRemoteData from "../hooks/useRemoteData";
 import DataStatus from "./DataStatus";
 import NewsSection from "./NewsSection";
 import Section from "./Section";
 
 export default function News() {
-  const { data, loading, error, reload } = useJsonData("data/news.json");
+  const { data, loading, error, reload } = useRemoteData(
+    newsApiUrl,
+    "data/news.json",
+  );
   const sections = Array.isArray(data?.sections) ? data.sections : [];
 
   return (

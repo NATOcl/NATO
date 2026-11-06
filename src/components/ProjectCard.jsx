@@ -1,6 +1,8 @@
+import { albumVaultUrl } from "../config";
 import Reveal from "./Reveal";
 
 const isExternal = (href) => /^https?:\/\//i.test(href);
+const resolveHref = (href) => (href === "/albumvault/" ? albumVaultUrl : href);
 
 function ProjectLink({ href, label, variant = "outline" }) {
   if (!href) return null;
@@ -50,8 +52,12 @@ export default function ProjectCard({ project, delay = 0 }) {
         <p className="card-text project-card__desc">{project.description}</p>
 
         <div className="project-card__actions">
-          <ProjectLink href={project.demo} label="Ver demo" variant="solid" />
-          <ProjectLink href={project.repo} label="Repositorio" />
+          <ProjectLink
+            href={resolveHref(project.demo)}
+            label="Ver demo"
+            variant="solid"
+          />
+          <ProjectLink href={resolveHref(project.repo)} label="Repositorio" />
         </div>
       </div>
     </Reveal>

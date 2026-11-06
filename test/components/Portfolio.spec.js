@@ -40,12 +40,14 @@ describe("Portfolio", () => {
     expect(container.querySelector('[role="status"]')).toBeNull();
   });
 
-  it("muestra un error y permite reintentar la carga", async () => {
+  it("muestra un error si fallan la API y el JSON, y permite reintentar", async () => {
     let calls = 0;
 
     spyOn(window, "fetch").and.callFake(() => {
       calls += 1;
-      if (calls === 1) return Promise.reject(new Error("falló"));
+      // Dos primeras llamadas: API y respaldo fallan. Al reintentar, la API
+      // vuelve a fallar y el respaldo responde.
+      if (calls <= 3) return Promise.reject(new Error("falló"));
       return Promise.resolve({
         ok: true,
         status: 200,
@@ -59,6 +61,7 @@ describe("Portfolio", () => {
     const alert = container.querySelector('[role="alert"]');
     expect(alert).not.toBeNull();
     expect(alert.textContent).toContain("No se pudieron cargar proyectos");
+    expect(calls).toBe(2);
 
     const retry = alert.querySelector("button");
     expect(retry.textContent).toContain("Reintentar");
@@ -66,9 +69,39 @@ describe("Portfolio", () => {
     act(() => retry.click());
     await flush();
 
-    expect(calls).toBe(2);
+    expect(calls).toBe(4);
     expect(container.querySelectorAll(".project-card").length).toBe(2);
     expect(container.querySelector('[role="alert"]')).toBeNull();
+  });
+
+  it("indica cuándo los datos vienen de la API REST", async () => {
+    mockFetch({ projects, count: 2 });
+    const { container } = render(<Portfolio />);
+    await flush();
+
+    expect(container.querySelectorAll(".project-card").length).toBe(2);
+    expect(container.querySelector(".data-source").textContent).toContain(
+      "datos desde la API REST · 2 proyectos",
+    );
+  });
+
+  it("indica el respaldo JSON cuando la API no responde", async () => {
+    spyOn(window, "fetch").and.returnValues(
+      Promise.reject(new Error("sin red")),
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(projects),
+      }),
+    );
+
+    const { container } = render(<Portfolio />);
+    await flush();
+
+    expect(container.querySelectorAll(".project-card").length).toBe(2);
+    expect(container.querySelector(".data-source").textContent).toContain(
+      "respaldo JSON local",
+    );
   });
 
   it("muestra un mensaje cuando el JSON está vacío", async () => {

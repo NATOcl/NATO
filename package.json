@@ -13,6 +13,7 @@
     "dev:app": "npm --prefix AlbumVault run dev -- --port 5174 --base=/albumvault/",
     "dev:api": "node server.js",
     "build": "vite build && npm --prefix AlbumVault run build -- --base=/albumvault/",
+    "build:pages": "vite build --base=/NATO/",
     "start": "node server.js",
     "preview": "npm run build && node server.js",
     "test": "karma start karma.conf.cjs --single-run",

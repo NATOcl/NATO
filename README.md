@@ -4,7 +4,8 @@ Portafolio personal de Nicolas Troncoso Olivares, estudiante de Ingeniería en I
 
 ## Demo
 
-- **CV:** https://nato-cv.onrender.com/
+- **CV (GitHub Pages):** https://natocl.github.io/NATO/
+- **App completa (Render):** https://nato-cv.onrender.com/
 - **AlbumVault:** https://nato-cv.onrender.com/albumvault/
 - **Repositorio:** https://github.com/NATOcl/NATO
 
@@ -17,7 +18,7 @@ Portafolio personal de Nicolas Troncoso Olivares, estudiante de Ingeniería en I
   - `Button` en los llamados a la acción.
   - `Form` y `FormControl` en el formulario de contacto.
 - **Componentes reutilizables con props:** `Section`, `ProjectCard`, `NewsCard`, `NewsSection` y `ContactForm`.
-- **Datos desde JSON:** proyectos y noticias se cargan con `fetch` desde `public/data/`.
+- **Datos desde una API REST:** proyectos y noticias se piden a `/api/projects` y `/api/news`; si la API no responde, el hook `useRemoteData` cae automáticamente al JSON de `public/data/`. Así el CV funciona igual en Render y en GitHub Pages.
 - **Sección de noticias con dos tableros** cargados dinámicamente desde `news.json`.
 - **Estado e interacción:** tema claro/oscuro persistente, menú móvil, modal de PDF, validación del formulario y reintento de carga de datos.
 - **Accesibilidad:** etiquetas `alt`, formularios con `label`, foco visible, navegación por teclado, `aria-expanded`, `aria-live` y enlace para saltar al contenido.
@@ -30,7 +31,7 @@ Portafolio personal de Nicolas Troncoso Olivares, estudiante de Ingeniería en I
 - **AlbumVault:** React 18, Vite 8, Bootstrap Reboot e IndexedDB.
 - **Servidor:** Node.js; sirve ambas apps y hace de proxy para MusicBrainz, iTunes y Spotify.
 - **Tests:** Jasmine, Karma, esbuild e Istanbul.
-- **Deploy:** Render, definido en [`render.yaml`](./render.yaml).
+- **Deploy:** CV estático en GitHub Pages con GitHub Actions; app completa en Render, definida en [`render.yaml`](./render.yaml).
 
 ## Requisitos
 
@@ -61,6 +62,7 @@ Scripts individuales:
 npm run dev:cv      # solo el CV
 npm run dev:app     # solo AlbumVault
 npm run dev:api     # solo el servidor raíz
+npm run build:pages # solo el CV, con base /NATO/ para GitHub Pages
 ```
 
 Producción local:
@@ -79,7 +81,7 @@ npm test             # ejecución única + informe de cobertura
 npm run test:watch   # modo interactivo
 ```
 
-El informe HTML queda en `coverage/html/index.html`. La última ejecución local obtuvo **22 pruebas exitosas** y una cobertura de **87,8 % de sentencias**, **67,8 % de ramas**, **95,1 % de funciones** y **89,0 % de líneas**.
+El informe HTML queda en `coverage/html/index.html`. La última ejecución local obtuvo **29 pruebas exitosas** y una cobertura de **89,0 % de sentencias**, **70,4 % de ramas**, **93,3 % de funciones** y **90,9 % de líneas**.
 
 Karma busca Chrome o Edge automáticamente. Si no lo encuentra, define la ruta:
 
@@ -102,6 +104,8 @@ El plan de pruebas, los casos y los resultados esperados están documentados en 
 index.html                 entrada de Vite
 src/App.jsx                orden de las secciones
 src/components/            componentes del CV
+src/config.js              URLs de AlbumVault y de la API (según el build)
+src/hooks/useRemoteData.js carga desde la API REST con respaldo JSON
 src/hooks/useJsonData.js   carga de JSON con estado, error y reintento
 src/data/content.js        perfil, navegación, educación, skills y contacto
 src/css/main.css           estilos propios y ajustes sobre Bootstrap
@@ -111,8 +115,9 @@ src/assets/portrait.svg    retrato ilustrado del hero
 test/                      specs de Jasmine y utilidades
 karma.conf.cjs             configuración de Karma + esbuild + cobertura
 TESTING.md                 plan de pruebas
+.github/workflows/         despliegue automático del CV en GitHub Pages
 AlbumVault/                SPA musical independiente
-server.js                  sirve CV, AlbumVault y API
+server.js                  sirve CV, AlbumVault y la API REST
 ```
 
 ## Editar contenido
@@ -149,7 +154,26 @@ Página completa:
 
 ## Despliegue
 
-`render.yaml` define el servicio Node en Render. El servidor necesita Node porque también sirve AlbumVault y las APIs; una página puramente estática puede mostrar el CV, pero no la app musical ni el proxy de metadatos. GitHub Pages conserva un stub que redirige a la demo publicada en Render.
+### GitHub Pages (CV)
+
+El workflow [`.github/workflows/deploy-pages.yml`](./.github/workflows/deploy-pages.yml) compila el CV con `npm run build:pages` (base `/NATO/`), genera `dist/404.html` para las recargas y publica el artefacto con `actions/deploy-pages`. Se ejecuta en cada push a `main` y también a mano desde la pestaña **Actions**.
+
+Requisito único, una sola vez: en **Settings → Pages → Build and deployment** la fuente debe ser **GitHub Actions**. El CV queda en https://natocl.github.io/NATO/.
+
+En ese build, `VITE_ALBUMVAULT_URL`, `VITE_PROJECTS_API_URL` y `VITE_NEWS_API_URL` apuntan a Render. Si Render está dormido o no responde en 8 s, `useRemoteData` usa el JSON local y la sección sigue funcionando; el estado se ve bajo el listado de proyectos.
+
+### Render (app completa)
+
+`render.yaml` define el servicio Node en Render: sirve el CV, AlbumVault y la API REST (`/api/projects`, `/api/news`) en un solo proceso. El servidor necesita Node porque también sirve la app musical y el proxy de metadatos. La API permite CORS solo desde `https://natocl.github.io` y los servidores locales.
+
+## API REST
+
+| Método | Ruta | Respuesta |
+| --- | --- | --- |
+| `GET` | `/api/projects` | `{ projects, count, updatedAt }` |
+| `GET` | `/api/news` | `{ sections, count, updatedAt }` |
+
+Las colecciones se leen de `dist/data/` (o de `public/data/` en desarrollo). El frontend consume estos endpoints con `useRemoteData`, que expone `data`, `loading`, `error`, `source` y `reload`; en GitHub Pages el respaldo es `data/projects.json` y `data/news.json`.
 
 ## Autor
 

@@ -46,22 +46,29 @@ Los specs se llaman `.spec.js` porque `karma-esbuild` normaliza las entradas a `
 | S5 | `ContactForm` | Editar el mensaje después de preparar el correo | El bloque de éxito se oculta para evitar un enlace obsoleto |
 | S6 | `ContactForm` | Validación pura | `validateContact` devuelve errores para nombre, correo y mensaje; `{}` para datos válidos |
 | S7 | `Courses` | Abrir curso y pulsar Escape | Se abre el diálogo, se enfoca el cierre, Escape lo cierra y devuelve el foco al botón |
-| S8 | `Portfolio` | Fallo de `fetch` y clic en Reintentar | Aparece `role="alert"`, el segundo intento carga las tarjetas y desaparece el error |
+| S8 | `Portfolio` | Fallo de la API y del JSON, clic en Reintentar | Aparece `role="alert"`, el reintento vuelve a pedir la API, carga las tarjetas y desaparece el error |
 | S9 | `Budy` | Cerrar la mascota | El nodo `.budy` se elimina del DOM |
+| S10 | `useRemoteData` | La API responde con datos | Una sola llamada a `/api/projects`, `source: "api"` y los datos disponibles |
+| S11 | `useRemoteData` | La API falla y el respaldo responde | Segunda llamada a `data/projects.json`, `source: "json"` y los datos disponibles |
+| S12 | `useRemoteData` | La API responde con error HTTP | Se ignora la respuesta 503 y se usa el JSON local |
+| S13 | `useRemoteData` | Fallan la API y el respaldo | Estado de error con `data: null` |
+| S14 | `useRemoteData` | Reintento tras el error | La tercera llamada recupera los datos desde la API |
 
 ### 3. Carga de datos y DOM
 
 | ID | Componente | Caso | Resultado esperado |
 | --- | --- | --- | --- |
-| D1 | `Portfolio` | `fetch` resuelve un arreglo JSON | Primero aparece «cargando proyectos…»; luego dos `.project-card` y desaparece el estado |
+| D1 | `Portfolio` | La API responde con `{ projects }` | Primero aparece «cargando proyectos…»; luego dos `.project-card`, el aviso «datos desde la API REST» y desaparece el estado |
 | D2 | `Portfolio` | JSON vacío | Se muestra «Todavía no hay proyectos para mostrar» |
 | D3 | `News` | JSON con dos secciones | Se renderizan dos `.news-board`, dos `.news-card` y `<time datetime="…">` |
 | D4 | `News` | Error de red | Se muestra el mensaje de error y el botón Reintentar |
 | D5 | `News` | JSON sin secciones | Se muestra el estado vacío |
+| D6 | `Portfolio` | La API falla y se usa el respaldo | Se ven las tarjetas y el aviso «respaldo JSON local» |
 
 ### 4. Mocks y aislamiento
 
-- `spyOn(window, "fetch")` simula respuestas exitosas, errores y JSON vacío.
+- `spyOn(window, "fetch")` simula respuestas de la API, respuestas de error HTTP, caídas de red y el respaldo JSON.
+- `useRemoteData` se prueba con un componente sonda que expone `loading`, `source`, `error` y la acción `reload`.
 - esbuild reemplaza el PDF por un módulo vacío y convierte imágenes en `dataurl` para no depender de archivos externos.
 - `localStorage` se limpia y `data-theme` se restablece antes de cada prueba de cabecera.
 - React 19 se monta con `createRoot` y `act`; cada spec desmonta su árbol en `afterEach`.
@@ -76,12 +83,12 @@ Los specs se llaman `.spec.js` porque `karma-esbuild` normaliza las entradas a `
 ## Resultados de la última ejecución
 
 ```text
-Executed 22 of 22 SUCCESS
+Executed 29 of 29 SUCCESS
 
-Statements   : 87.76 % ( 251/286 )
-Branches     : 67.80 % ( 139/205 )
-Functions    : 95.06 % ( 77/81 )
-Lines        : 88.97 % ( 226/254 )
+Statements   : 88.95 % ( 298/335 )
+Branches     : 70.43 % ( 162/230 )
+Functions    : 93.33 % ( 84/90 )
+Lines        : 90.87 % ( 269/296 )
 ```
 
 ## Reproducir
